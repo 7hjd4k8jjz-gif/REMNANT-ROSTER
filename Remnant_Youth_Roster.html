@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>The Remnant Youth — Roster</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Remnant Roster">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111111">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  :root{
+    color-scheme: light;
+    --navy:#111111;
+    --navy-dark:#000000;
+    --border:#e5e8ec;
+    --bg:#f3f5f7;
+    --card:#ffffff;
+    --text:#1d2530;
+    --muted:#75808c;
+    --green:#1e6b3d;
+    --green-bg:#e2f4e8;
+    --orange:#a05a05;
+    --orange-bg:#fdecd6;
+    --red:#b23b3b;
+    --red-bg:#fbe8e8;
+    --yellow:#8a6d1f;
+    --yellow-bg:#fdf1c8;
+    --blue:#1d4ed8;
+    --blue-bg:#dce7fb;
+    --lime:#111111;
+    --lime-text:#9fe436;
+    --gray-badge:#6b7280;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:16px;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:calc(14px + env(safe-area-inset-top)) 16px 14px 16px;
+  }
+  header h1{margin:0 0 2px 0;font-size:19px;line-height:1.25;}
+  header p{margin:0;font-size:12.5px;color:#cfe0f0;line-height:1.4;}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .refresh-btn{
+    flex:0 0 auto;
+    background:var(--lime-text);
+    color:#0d1a00;
+    border:none;
+    padding:8px 13px;
+    border-radius:20px;
+    font-size:12.5px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    white-space:nowrap;
+  }
+  .refresh-btn:active{opacity:0.8;}
+
+  .toolbar{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:10px 12px;
+  }
+  .summary-bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    color:var(--muted);
+    padding:2px 2px 10px 2px;
+  }
+  .summary-bar strong{color:var(--text);font-size:14px;}
+  .summary-sep{margin:0 4px;color:var(--border);}
+  .summary-dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    margin-right:2px;
+  }
+  .dot-active{background:#34c759;}
+  .dot-total{background:#b7bcc3;}
+
+  .chip-row{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:8px;
+    scrollbar-width:none;
+  }
+  .chip-row::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:0 0 auto;
+    border:1.5px solid var(--navy);
+    background:#fff;
+    color:var(--navy);
+    padding:9px 14px;
+    border-radius:20px;
+    font-size:13.5px;
+    font-weight:bold;
+    white-space:nowrap;
+  }
+  .chip.active{background:var(--navy);color:#fff;}
+  .chip .n{font-weight:normal;margin-left:3px;opacity:0.85;}
+  .chip-active-num{font-weight:bold;color:var(--green);}
+  .chip.active .chip-active-num{color:var(--lime-text);}
+
+  .row2{display:flex;gap:8px;align-items:center;}
+  #search{
+    flex:1;
+    padding:11px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:16px;
+    background:#f7f8fa;
+  }
+  .sort-btn{
+    flex:0 0 auto;
+    border:1px solid var(--border);
+    background:#f7f8fa;
+    color:var(--navy-dark);
+    padding:11px 12px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+
+  .sort-panel{
+    display:none;
+    padding:12px 4px 2px 4px;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .sort-panel.open{display:flex;}
+  .sort-opt{
+    border:1px solid var(--border);
+    background:#f7f8fa;
+    padding:7px 12px;
+    border-radius:16px;
+    font-size:12.5px;
+    color:var(--text);
+  }
+  .sort-opt.active{background:var(--navy-dark);color:#fff;border-color:var(--navy-dark);}
+
+  .list{padding:12px;display:flex;flex-direction:column;gap:12px;}
+
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--border);
+    box-shadow:0 1px 2px rgba(0,0,0,0.04);
+    overflow:hidden;
+  }
+  .card-top{
+    padding:14px 14px 10px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .student-name{font-size:17px;font-weight:bold;margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:7px;}
+  .parent-name{font-size:13.5px;color:var(--muted);margin:2px 0 0 0;}
+  .pay-badge{
+    flex:0 0 auto;
+    font-size:11px;
+    font-weight:bold;
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+  }
+  .pay-STEP{background:var(--blue-bg);color:var(--blue);}
+  .pay-Self{background:var(--green-bg);color:var(--green);}
+
+  .active-toggle{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+  }
+  .active-toggle .active-label{
+    font-size:10px;
+    font-weight:bold;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+  }
+  .ios-switch{
+    position:relative;
+    display:inline-block;
+    width:47px;
+    height:28px;
+    flex:0 0 auto;
+  }
+  .ios-switch input{opacity:0;width:0;height:0;}
+  .ios-switch-track{
+    position:absolute;
+    cursor:pointer;
+    inset:0;
+    background-color:#e2e3e6;
+    transition:background-color .2s;
+    border-radius:34px;
+  }
+  .ios-switch-track:before{
+    position:absolute;
+    content:"";
+    height:24px;
+    width:24px;
+    left:2px;
+    top:2px;
+    background-color:#fff;
+    transition:transform .2s;
+    border-radius:50%;
+    box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  }
+  .ios-switch input:checked + .ios-switch-track{background-color:#34c759;}
+  .ios-switch input:checked + .ios-switch-track:before{transform:translateX(19px);}
+
+  .card.inactive{filter:grayscale(1);opacity:0.55;}
+
+  .badges{padding:0 14px 12px 14px;display:flex;flex-wrap:wrap;gap:6px;}
+  .badge{
+    font-size:11.5px;
+    font-weight:bold;
+    padding:4px 10px;
+    border-radius:10px;
+    white-space:nowrap;
+  }
+  .badge-RYLA{background:var(--lime);color:var(--lime-text);}
+  .badge-Remnant-Kids{background:#dcf1e4;color:var(--green);}
+  .badge-3x3-Basketball{background:var(--gray-badge);color:#ffffff;}
+  .badge-Other{background:#ffffff;color:#666;border:1px solid #ddd;}
+
+  .contact-row{
+    display:flex;
+    border-top:1px solid var(--border);
+  }
+  .contact-btn{
+    flex:1;
+    text-align:center;
+    padding:11px 8px;
+    font-size:13px;
+    font-weight:bold;
+    color:var(--navy);
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+  }
+  .contact-btn:first-child{border-right:1px solid var(--border);}
+  .contact-btn .ic{font-size:14px;}
+
+  .toggle-summary{
+    width:100%;
+    background:#f7f8fa;
+    border:none;
+    border-top:1px solid var(--border);
+    padding:11px 14px;
+    font-size:13px;
+    font-weight:bold;
+    color:var(--navy-dark);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .toggle-summary.status-paid{background:var(--green-bg);color:var(--green);}
+  .toggle-summary.status-invoiced{background:var(--red-bg);color:var(--red);}
+  .toggle-summary.status-needs{background:var(--yellow-bg);color:var(--yellow);}
+  .toggle-summary .chev{transition:transform .15s;font-size:12px;color:inherit;opacity:0.65;}
+  .card.expanded .toggle-summary .chev{transform:rotate(180deg);}
+
+  .details{
+    display:none;
+    padding:14px;
+    border-top:1px solid var(--border);
+    background:#fafbfc;
+  }
+  .card.expanded .details{display:block;}
+
+  .field{margin-bottom:12px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:block;
+    font-size:11.5px;
+    font-weight:bold;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    margin-bottom:5px;
+  }
+  .field input[type=text], .field textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#fff;
+  }
+  .field textarea{resize:vertical;min-height:44px;}
+
+  .yn-group{display:flex;gap:8px;}
+  .yn-btn{
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:1.5px solid var(--border);
+    background:#fff;
+    font-size:14px;
+    font-weight:bold;
+    color:var(--muted);
+    text-align:center;
+  }
+  .yn-btn.yes-active{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+  .yn-btn.no-active{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+
+  .detail-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.4;}
+
+  .empty-state{padding:60px 24px;text-align:center;color:var(--muted);font-size:14px;}
+  footer{padding:16px 20px 24px 20px;color:var(--muted);font-size:11.5px;line-height:1.5;text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>The Remnant Youth — Roster</h1>
+      <p>Tap a card for payment details. Tap a filter chip to narrow the list.</p>
+    </div>
+    <button id="refreshBtn" class="refresh-btn" title="Reload latest data">⟳ Refresh</button>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="summary-bar">
+    <span class="summary-dot dot-active"></span><strong id="activeCount">0</strong> Active
+    <span class="summary-sep">/</span>
+    <span class="summary-dot dot-total"></span><strong id="totalCount">0</strong> Total
+  </div>
+  <div class="chip-row" id="chipRow">
+    <button class="chip active" data-filter="All">All <span class="n" id="n-All"></span></button>
+    <button class="chip" data-filter="RYLA">RYLA <span class="n" id="n-RYLA"></span></button>
+    <button class="chip" data-filter="Remnant Kids">Remnant Kids <span class="n" id="n-Remnant Kids"></span></button>
+    <button class="chip" data-filter="3x3 Basketball">3x3 Basketball <span class="n" id="n-3x3 Basketball"></span></button>
+    <button class="chip" data-filter="Other">Other <span class="n" id="n-Other"></span></button>
+  </div>
+  <div class="row2">
+    <input type="text" id="search" placeholder="Search student or parent...">
+    <button class="sort-btn" id="sortToggle">Sort ▾</button>
+  </div>
+  <div class="sort-panel" id="sortPanel">
+    <button class="sort-opt active" data-sort="student">Name</button>
+    <button class="sort-opt" data-sort="parent">Parent</button>
+    <button class="sort-opt" data-sort="payment">Payment</button>
+    <button class="sort-opt" data-sort="dir">↕ Reverse</button>
+  </div>
+</div>
+
+<div class="list" id="list"></div>
+<div class="empty-state" id="emptyState" style="display:none;">No students match this filter/search.</div>
+
+<footer>The Remnant Youth Leadership Academy Enrollment Roster · Edits to Paid Through / Invoice / Paid / Notes save automatically on this device.</footer>
+
+<script>
+const ROSTER = [
+  {
+    "id": 0,
+    "student": "EJ Roberts",
+    "parent": "KEvin Roberts",
+    "phone": "+1 904-616-9964",
+    "email": "kevroberts43@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Kids (Grades K-5) **Starting August 5** = $240/ month"
+  },
+  {
+    "id": 2,
+    "student": "Ronin Fenton",
+    "parent": "Sarah Fenton",
+    "phone": "+1 813-997-2448",
+    "email": "rafparents@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month"
+  },
+  {
+    "id": 3,
+    "student": "Selena Khedekar",
+    "parent": "Sophia Khedekar / Aditya Khedekar",
+    "phone": "+1 978-407-3028",
+    "email": "sophia.anita8@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month; Remnant Virtual Classroom (Grades K-12)"
+  },
+  {
+    "id": 4,
+    "student": "Zakariah Riggan",
+    "parent": "Darrell Lake / Nikki Lake",
+    "phone": "+1 813-610-3508",
+    "email": "darrell.lake88@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm = $240/ month"
+  },
+  {
+    "id": 5,
+    "student": "Milo Callihan",
+    "parent": "Courtney Bush / James Bush",
+    "phone": "+1 863-860-1102",
+    "email": "cplummer0528@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm"
+  },
+  {
+    "id": 6,
+    "student": "Rebekah Conley",
+    "parent": "Wendy Conley",
+    "phone": "+1 813-244-7862",
+    "email": "wendyconley1@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy (Grades 6-12) - Fridays; RYLA Summer Academy (Grades 6-12) - June 8 - June 12"
+  },
+  {
+    "id": 7,
+    "student": "Elijah Rodriguez",
+    "parent": "Joel Rodriguez / Liannie Rodriguez",
+    "phone": "+1 321-287-0991",
+    "email": "joelrodriguez071989@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "Summer 3x3 Development Clinic (Grades 3-5) - June 22 - 25"
+  },
+  {
+    "id": 8,
+    "student": "Cashton Ricci",
+    "parent": "Nicole Ferraro / Anthony Ricci",
+    "phone": "+1 262-806-2408",
+    "email": "nikkiricci29@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "Self-Pay",
+    "detail": "3x3 Basketball Training - (Thursdays)"
+  },
+  {
+    "id": 9,
+    "student": "Brayden Ortiz",
+    "parent": "Yalitza Soto / Edwin Ortiz",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+  },
+  {
+    "id": 10,
+    "student": "Ayden Ortiz",
+    "parent": "Yalitza Soto / Edwin Ortiz",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+  },
+  {
+    "id": 11,
+    "student": "Jayden Ortiz",
+    "parent": "Yalitza Soto / Edwin Ortiz",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3x3 Basketball Training - (Thursdays)"
+  },
+  {
+    "id": 12,
+    "student": "Noah Stream",
+    "parent": "Julie Smallwood",
+    "phone": "+1 815-979-3273",
+    "email": "juliesmallwood3@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+  },
+  {
+    "id": 13,
+    "student": "Greyson Stream",
+    "parent": "Julie Smallwood",
+    "phone": "+1 815-979-3273",
+    "email": "juliesmallwood3@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+  },
+  {
+    "id": 14,
+    "student": "Abram McHenry",
+    "parent": "Alisha McHenry",
+    "phone": "+1 813-838-5451",
+    "email": "alisha.mchenry86@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist - (May 1)"
+  },
+  {
+    "id": 15,
+    "student": "Brayson Amerman",
+    "parent": "Michelle Amerman / Debra Amerman",
+    "phone": "+1 813-309-2520",
+    "email": "deberma@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist - (May 1)"
+  },
+  {
+    "id": 16,
+    "student": "Ronin Fenton",
+    "parent": "Sarah Fenton / Kyle Fenton",
+    "phone": "+1 813-997-2448",
+    "email": "sstrott2@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+  },
+  {
+    "id": 17,
+    "student": "River Ten Brink",
+    "parent": "Meghan Ten Brink / Travis Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (3x3 Basketball Training)"
+  },
+  {
+    "id": 18,
+    "student": "Ezra Ten Brink",
+    "parent": "Meghan Ten Brink / Travis Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (3x3 Basketball Training)"
+  },
+  {
+    "id": 19,
+    "student": "Lily Cooke",
+    "parent": "Amanda Arey",
+    "phone": "+1 863-800-7744",
+    "email": "lmcparents15@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist"
+  },
+  {
+    "id": 20,
+    "student": "Ronin Fenton",
+    "parent": "Sarah Fenton / Kyle Fenton",
+    "phone": "+1 813-997-2448",
+    "email": "rafparents@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist"
+  },
+  {
+    "id": 21,
+    "student": "Aaron Barfield",
+    "parent": "Tiffany Barfield / Aaron Barfield",
+    "phone": "+1 813-469-7155",
+    "email": "thebarfields2012@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (3x3 Basketball Training)"
+  },
+  {
+    "id": 22,
+    "student": "Avarielle Campbell",
+    "parent": "Leanne Campbell",
+    "phone": "+1 813-452-0062",
+    "email": "leeleecampbell@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist"
+  },
+  {
+    "id": 23,
+    "student": "Joseph Campbell",
+    "parent": "Leanne Campbell",
+    "phone": "+1 813-452-0062",
+    "email": "leeleecampbell@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Painting With A Twist"
+  },
+  {
+    "id": 24,
+    "student": "Neigha Tooley",
+    "parent": "Christyn Hamel / William",
+    "phone": "+1 863-226-9975",
+    "email": "christyn.hamel@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 25,
+    "student": "Kylie Collins",
+    "parent": "Heather Collins",
+    "phone": "+1 813-495-8176",
+    "email": "hcollins76@yahoo.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 26,
+    "student": "Prince Smith",
+    "parent": "Brittany Smith",
+    "phone": "+1 469-988-1630",
+    "email": "brinicholesmith@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "Self-Pay",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 27,
+    "student": "Kylie Collins",
+    "parent": "Heather Collins",
+    "phone": "+1 813-495-8176",
+    "email": "hcollins76@yahoo.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 30,
+    "student": "Dhristian Mitchell",
+    "parent": "Christine Morton Mitchell / Demetrius Mitchell",
+    "phone": "+1 813-609-9688",
+    "email": "daniandsons@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (Basketball Training)"
+  },
+  {
+    "id": 31,
+    "student": "Christian Theriault",
+    "parent": "Vanessa Theriault / Anthony Theriault",
+    "phone": "+1 813-235-7134",
+    "email": "vanessa-theriault@outlook.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 32,
+    "student": "Jude Ten Brink",
+    "parent": "Meghan Ten Brink / Travis Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (Basketball Training)"
+  },
+  {
+    "id": 33,
+    "student": "Elijah Rodriguez",
+    "parent": "Liannie Rodriguez",
+    "phone": "+1 407-712-5488",
+    "email": "liannierodriguez@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "3on3 Live (Basketball Training)"
+  },
+  {
+    "id": 34,
+    "student": "Yuliani Rodriguez",
+    "parent": "Kimberly Rodriguez",
+    "phone": "+1 727-953-2864",
+    "email": "kroderz546@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 35,
+    "student": "Jacania Rodriguez",
+    "parent": "Kimberly Rodriguez",
+    "phone": "+1 727-953-2864",
+    "email": "kroderz546@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Remnant Leadership Academy"
+  },
+  {
+    "id": 36,
+    "student": "Jionni Acosta",
+    "parent": "Melissa Lugo / Jaime Acosta",
+    "phone": "+1 656-210-3211",
+    "email": "melissalugo617@gmail.com",
+    "programs": [
+      "RYLA",
+      "3x3 Basketball"
+    ],
+    "payment": "Self-Pay",
+    "detail": "Remnant Leadership Academy; 3on3 Live (Basketball Training)"
+  },
+  {
+    "id": 37,
+    "student": "Andres Williams",
+    "parent": "Amy Williams",
+    "phone": "+1 813-833-8143",
+    "email": "congenialmom@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "Manually added — 3x3 Basketball",
+    "defaultInvoiceSent": "Yes",
+    "defaultPaid": "No"
+  },
+  {
+    "id": 38,
+    "student": "Liam Rogers",
+    "parent": "Angey Rogers",
+    "phone": "",
+    "email": "awylf77@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "Manually added — 3x3 Basketball",
+    "defaultInvoiceSent": "Yes",
+    "defaultPaid": "Yes"
+  },
+  {
+    "id": 39,
+    "student": "Marcellus Ramirez",
+    "parent": "Katherine Ramirez",
+    "phone": "+1 347-456-8219",
+    "email": "celestialfitteam@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "Manually added — 3x3 Basketball",
+    "defaultInvoiceSent": "Yes",
+    "defaultPaid": "Yes"
+  }
+];
+
+const STORAGE_KEY = "remnant_youth_roster_edits_v1";
+function loadEdits(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveEdits(edits){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(edits)); }catch(e){}
+}
+let edits = loadEdits();
+let expandedIds = new Set();
+
+let state = { filter:"All", search:"", sortKey:"student", sortDir:1 };
+
+function programBadgeClass(p){ return "badge-" + p.replace(/[^a-zA-Z0-9]+/g,'-'); }
+
+function findRosterItem(id){
+  return ROSTER.find(r => String(r.id) === String(id)) || {};
+}
+function getRow(idOrItem){
+  const id = (idOrItem && typeof idOrItem === "object") ? idOrItem.id : idOrItem;
+  const rosterItem = findRosterItem(id);
+  const e = edits[id] || {};
+  return {
+    paidThrough: e.paidThrough !== undefined ? e.paidThrough : (rosterItem.defaultPaidThrough || ""),
+    invoiceSent: e.invoiceSent || rosterItem.defaultInvoiceSent || "No",
+    paid: e.paid || rosterItem.defaultPaid || "No",
+    notes: e.notes !== undefined ? e.notes : "",
+    active: e.active || "Yes"
+  };
+}
+function updateEdit(id, field, value){
+  if(!edits[id]) edits[id] = {};
+  edits[id][field] = value;
+  saveEdits(edits);
+}
+function statusInfo(row){
+  if(row.paid === "Yes") return {text:"Paid", cls:"status-paid"};
+  if(row.invoiceSent === "Yes") return {text:"Invoice sent, unpaid", cls:"status-invoiced"};
+  return {text:"Needs invoice", cls:"status-needs"};
+}
+function refreshSummary(card, id){
+  const row = getRow({id});
+  const info = statusInfo(row);
+  const btn = card.querySelector(".toggle-summary");
+  btn.classList.remove("status-paid","status-invoiced","status-needs");
+  btn.classList.add(info.cls);
+  btn.querySelector("span").textContent = info.text + (row.paidThrough ? " · Through " + row.paidThrough : "");
+}
+
+function matchesFilter(item){ return state.filter === "All" ? true : item.programs.includes(state.filter); }
+function matchesSearch(item){
+  if(!state.search) return true;
+  const s = state.search.toLowerCase();
+  return item.student.toLowerCase().includes(s) || item.parent.toLowerCase().includes(s) || item.email.toLowerCase().includes(s);
+}
+function sortedFiltered(){
+  let list = ROSTER.filter(matchesFilter).filter(matchesSearch);
+  const key = state.sortKey;
+  list.sort((a,b)=>{
+    const aInactive = getRow(a).active === "No" ? 1 : 0;
+    const bInactive = getRow(b).active === "No" ? 1 : 0;
+    if(aInactive !== bInactive) return aInactive - bInactive;
+    let av = (a[key]||"").toString().toLowerCase();
+    let bv = (b[key]||"").toString().toLowerCase();
+    if(av < bv) return -1*state.sortDir;
+    if(av > bv) return 1*state.sortDir;
+    return 0;
+  });
+  return list;
+}
+function updateCounts(){
+  const cats = ["All","RYLA","Remnant Kids","3x3 Basketball","Other"];
+  cats.forEach(c=>{
+    const items = c === "All" ? ROSTER : ROSTER.filter(item=>item.programs.includes(c));
+    const total = items.length;
+    const active = items.filter(item => getRow(item).active !== "No").length;
+    document.getElementById("n-"+c).innerHTML = `<span class="chip-active-num">${active}</span>/${total}`;
+  });
+  const activeCount = ROSTER.filter(item => getRow(item).active !== "No").length;
+  document.getElementById("activeCount").textContent = activeCount;
+  document.getElementById("totalCount").textContent = ROSTER.length;
+}
+
+function render(){
+  const list = sortedFiltered();
+  const container = document.getElementById("list");
+  container.innerHTML = "";
+  document.getElementById("emptyState").style.display = list.length ? "none" : "block";
+
+  list.forEach(item=>{
+    const row = getRow(item);
+    const isOpen = expandedIds.has(item.id);
+    const payClass = item.payment === "STEP UP" ? "pay-STEP" : "pay-Self";
+    const badges = item.programs.map(p=>`<span class="badge ${programBadgeClass(p)}">${p}</span>`).join("");
+    const telHref = "tel:" + item.phone.replace(/[^0-9+]/g,'');
+
+    const card = document.createElement("div");
+    card.className = "card" + (isOpen ? " expanded" : "") + (row.active === "No" ? " inactive" : "");
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <p class="student-name">${item.student} <span class="pay-badge ${payClass}">${item.payment}</span></p>
+          <p class="parent-name">${item.parent}</p>
+        </div>
+        <div class="active-toggle">
+          <span class="active-label">Active</span>
+          <label class="ios-switch">
+            <input type="checkbox" data-id="${item.id}" data-field="active" ${row.active === "Yes" ? "checked" : ""}>
+            <span class="ios-switch-track"></span>
+          </label>
+        </div>
+      </div>
+      <div class="badges">${badges}</div>
+      <div class="contact-row">
+        <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
+        <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
+      </div>
+      <button class="toggle-summary ${statusInfo(row).cls}" data-toggle="${item.id}">
+        <span>${statusInfo(row).text}${row.paidThrough ? " · Through " + row.paidThrough : ""}</span>
+        <span class="chev">▾</span>
+      </button>
+      <div class="details">
+        <div class="field">
+          <label>Paid Through (Month/Year)</label>
+          <input type="text" data-id="${item.id}" data-field="paidThrough" placeholder="e.g. Aug 2026" value="${row.paidThrough}">
+        </div>
+        <div class="field">
+          <label>Invoice Sent?</label>
+          <div class="yn-group" data-yn="invoiceSent" data-id="${item.id}">
+            <button type="button" class="yn-btn ${row.invoiceSent==='Yes'?'yes-active':''}" data-val="Yes">Yes</button>
+            <button type="button" class="yn-btn ${row.invoiceSent==='No'?'no-active':''}" data-val="No">No</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Paid?</label>
+          <div class="yn-group" data-yn="paid" data-id="${item.id}">
+            <button type="button" class="yn-btn ${row.paid==='Yes'?'yes-active':''}" data-val="Yes">Yes</button>
+            <button type="button" class="yn-btn ${row.paid==='No'?'no-active':''}" data-val="No">No</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Notes</label>
+          <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
+        </div>
+        <div class="detail-note">Original enrollment: ${item.detail}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  container.querySelectorAll('input[data-field="active"]').forEach(el=>{
+    el.addEventListener("change", (e)=>{
+      const id = e.target.getAttribute("data-id");
+      const val = e.target.checked ? "Yes" : "No";
+      updateEdit(id, "active", val);
+      // brief delay so the switch animation is visible before the card jumps to the bottom
+      setTimeout(render, 220);
+    });
+  });
+
+  container.querySelectorAll(".toggle-summary").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-toggle");
+      const card = btn.closest(".card");
+      if(expandedIds.has(id)){ expandedIds.delete(id); card.classList.remove("expanded"); }
+      else { expandedIds.add(id); card.classList.add("expanded"); }
+    });
+  });
+
+  container.querySelectorAll('input[type=text], textarea').forEach(el=>{
+    el.addEventListener("change", (e)=>{
+      const id = e.target.getAttribute("data-id");
+      const field = e.target.getAttribute("data-field");
+      updateEdit(id, field, e.target.value);
+      if(field === "paidThrough"){
+        refreshSummary(e.target.closest(".card"), id);
+      }
+    });
+  });
+
+  container.querySelectorAll(".yn-group").forEach(group=>{
+    group.querySelectorAll(".yn-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = group.getAttribute("data-id");
+        const field = group.getAttribute("data-yn");
+        const val = btn.getAttribute("data-val");
+        updateEdit(id, field, val);
+        group.querySelectorAll(".yn-btn").forEach(b=>{
+          b.classList.remove("yes-active","no-active");
+        });
+        btn.classList.add(val === "Yes" ? "yes-active" : "no-active");
+        refreshSummary(group.closest(".card"), id);
+      });
+    });
+  });
+
+  updateCounts();
+}
+
+document.getElementById("refreshBtn").addEventListener("click", ()=>{
+  location.reload();
+});
+
+document.querySelectorAll(".chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    state.filter = chip.getAttribute("data-filter");
+    render();
+  });
+});
+
+document.getElementById("search").addEventListener("input", (e)=>{
+  state.search = e.target.value;
+  render();
+});
+
+const sortToggle = document.getElementById("sortToggle");
+const sortPanel = document.getElementById("sortPanel");
+sortToggle.addEventListener("click", ()=>{
+  sortPanel.classList.toggle("open");
+});
+sortPanel.querySelectorAll(".sort-opt").forEach(opt=>{
+  opt.addEventListener("click", ()=>{
+    const key = opt.getAttribute("data-sort");
+    if(key === "dir"){
+      state.sortDir *= -1;
+    } else {
+      state.sortKey = key;
+      sortPanel.querySelectorAll(".sort-opt[data-sort]").forEach(o=>o.classList.remove("active"));
+      opt.classList.add("active");
+    }
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
