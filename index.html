@@ -343,6 +343,41 @@
 
   .empty-state{padding:60px 24px;text-align:center;color:var(--muted);font-size:14px;}
   footer{padding:16px 20px 24px 20px;color:var(--muted);font-size:11.5px;line-height:1.5;text-align:center;}
+
+  /* Owed badge on roster cards */
+  .owed-row{padding:0 14px 12px 14px;display:flex;align-items:center;gap:6px;}
+  .owed-label{font-size:11px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;}
+  .owed-amt{font-size:13px;font-weight:bold;padding:3px 10px;border-radius:10px;}
+  .owed-zero{background:var(--green-bg);color:var(--green);}
+  .owed-due{background:var(--red-bg);color:var(--red);}
+  .owed-none{background:#eef0f2;color:var(--muted);}
+
+  /* View toggle */
+  .view-toggle{display:flex;gap:0;background:rgba(255,255,255,0.12);border-radius:10px;padding:3px;margin-top:10px;}
+  .view-btn{flex:1;text-align:center;padding:8px 6px;border-radius:8px;font-size:13px;font-weight:bold;color:#cfe0f0;background:transparent;border:none;}
+  .view-btn.active{background:var(--lime-text);color:#0d1a00;}
+
+  /* Finance view */
+  #financeView{display:none;padding:12px;}
+  #financeView.open{display:block;}
+  #rosterView.hidden{display:none;}
+  .fin-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .fin-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+  .fin-stat .fin-label{font-size:11px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:4px;}
+  .fin-stat .fin-value{font-size:20px;font-weight:bold;color:var(--text);}
+  .fin-stat.fin-owed .fin-value{color:var(--red);}
+  .fin-stat.fin-paid .fin-value{color:var(--green);}
+  .fin-section-title{font-size:13px;font-weight:bold;color:var(--muted);text-transform:uppercase;letter-spacing:0.03em;margin:18px 4px 8px 4px;}
+  .fin-prog-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:14px;}
+  .fin-prog-row .fp-name{font-weight:bold;}
+  .fin-prog-row .fp-nums{color:var(--muted);font-size:12.5px;}
+  .fin-fam-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+  .fin-fam-top{display:flex;justify-content:space-between;align-items:center;}
+  .fin-fam-name{font-weight:bold;font-size:14px;}
+  .fin-fam-owed{font-weight:bold;font-size:14px;color:var(--red);}
+  .fin-fam-students{font-size:12px;color:var(--muted);margin-top:4px;}
+  .fin-empty{text-align:center;color:var(--muted);font-size:13px;padding:20px;}
+  .fin-note{font-size:11.5px;color:var(--muted);line-height:1.5;padding:8px 4px 0 4px;}
 </style>
 </head>
 <body>
@@ -355,8 +390,14 @@
     </div>
     <button id="refreshBtn" class="refresh-btn" title="Reload latest data">⟳ Refresh</button>
   </div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="btnRosterView" data-view="roster">Roster</button>
+    <button class="view-btn" id="btnFinanceView" data-view="finance">Finance</button>
+  </div>
+  <p id="lastUpdated" style="margin:8px 2px 0 2px;font-size:11px;color:#9fb3c4;"></p>
 </header>
 
+<div id="rosterView">
 <div class="toolbar">
   <div class="summary-bar">
     <span class="summary-dot dot-active"></span><strong id="activeCount">0</strong> Active
@@ -384,6 +425,27 @@
 
 <div class="list" id="list"></div>
 <div class="empty-state" id="emptyState" style="display:none;">No students match this filter/search.</div>
+</div>
+
+<div id="financeView">
+  <div class="fin-summary">
+    <div class="fin-stat"><div class="fin-label">Total Billed</div><div class="fin-value" id="finBilled">$0.00</div></div>
+    <div class="fin-stat fin-paid"><div class="fin-label">Total Paid</div><div class="fin-value" id="finPaid">$0.00</div></div>
+    <div class="fin-stat fin-owed"><div class="fin-label">Total Owed</div><div class="fin-value" id="finOwed">$0.00</div></div>
+    <div class="fin-stat"><div class="fin-label">Families w/ Balance</div><div class="fin-value" id="finFamCount">0</div></div>
+  </div>
+
+  <div class="fin-section-title">By Program</div>
+  <div id="finPrograms"></div>
+
+  <div class="fin-section-title">Families Ranked by Amount Owed</div>
+  <div id="finFamilies"></div>
+
+  <div class="fin-section-title">Recent Payment Activity</div>
+  <div id="finActivity"></div>
+
+  <div class="fin-note" id="finNote">Snapshot pulled from Wix invoicing. This view does not auto-sync live — ask Claude to re-pull Wix data for the latest numbers.</div>
+</div>
 
 <footer>The Remnant Youth Leadership Academy Enrollment Roster · Edits to Paid Through / Invoice / Paid / Notes save automatically on this device.</footer>
 
@@ -839,8 +901,142 @@ const ROSTER = [
     "detail": "Manually added — 3x3 Basketball",
     "defaultInvoiceSent": "Yes",
     "defaultPaid": "Yes"
+  },
+  {
+    "id": 40,
+    "student": "Braxtyn Clark",
+    "parent": "Katina Clark",
+    "phone": "",
+    "email": "katinayclark@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+  },
+  {
+    "id": 41,
+    "student": "Braden Clark",
+    "parent": "Katina Clark",
+    "phone": "",
+    "email": "katinayclark@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+  },
+  {
+    "id": 42,
+    "student": "Francisco Cruz",
+    "parent": "Gabriela Cruz",
+    "phone": "",
+    "email": "gabrielacruz317@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+  },
+  {
+    "id": 43,
+    "student": "Gabriel Cruz",
+    "parent": "Gabriela Cruz",
+    "phone": "",
+    "email": "gabrielacruz317@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+  },
+  {
+    "id": 44,
+    "student": "Emi Cruz",
+    "parent": "Gabriela Cruz",
+    "phone": "",
+    "email": "gabrielacruz317@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
+  },
+  {
+    "id": 45,
+    "student": "Isaac Zechmann",
+    "parent": "Danielle Zechmann",
+    "phone": "",
+    "email": "daniellezechmann@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "Newly enrolled — pulled from Wix invoice. Parent name inferred from email, please confirm."
+  },
+  {
+    "id": 46,
+    "student": "Sophia Rodriguez",
+    "parent": "Nicole Rodriguez",
+    "phone": "",
+    "email": "rodriguezfamily016@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
+  },
+  {
+    "id": 47,
+    "student": "Amelia Rodriguez",
+    "parent": "Nicole Rodriguez",
+    "phone": "",
+    "email": "rodriguezfamily016@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
   }
 ];
+
+const FINANCE = {
+  "2": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "3": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "9": {"billed":553.33,"paid":553.33,"owed":0.00},
+  "10": {"billed":1373.33,"paid":1373.33,"owed":0.00},
+  "11": {"billed":553.33,"paid":553.33,"owed":0.00},
+  "17": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "18": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "20": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "21": {"billed":120.00,"paid":120.00,"owed":0.00},
+  "24": {"billed":1310.00,"paid":655.00,"owed":655.00},
+  "31": {"billed":710.00,"paid":710.00,"owed":0.00},
+  "32": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "33": {"billed":720.00,"paid":720.00,"owed":0.00},
+  "37": {"billed":480.00,"paid":480.00,"owed":0.00},
+  "38": {"billed":240.00,"paid":240.00,"owed":0.00},
+  "39": {"billed":600.00,"paid":600.00,"owed":0.00},
+  "40": {"billed":415.00,"paid":207.50,"owed":207.50},
+  "41": {"billed":415.00,"paid":207.50,"owed":207.50},
+  "42": {"billed":715.00,"paid":715.00,"owed":0.00},
+  "43": {"billed":715.00,"paid":715.00,"owed":0.00},
+  "44": {"billed":180.00,"paid":180.00,"owed":0.00},
+  "45": {"billed":315.00,"paid":240.00,"owed":75.00},
+  "46": {"billed":1500.00,"paid":960.00,"owed":540.00},
+  "47": {"billed":1500.00,"paid":960.00,"owed":540.00}
+};
+// FINANCE is a snapshot pulled from Wix Receipts. Students not listed here
+// have no invoice history in Wix yet (owed shows as $0.00 / "No invoices yet").
+const FINANCE_LAST_UPDATED = "2026-08-04T16:44:37Z";
+function getFinance(id){
+  return FINANCE[String(id)] || {billed:0, paid:0, owed:0, none:true};
+}
+function formatLastUpdated(iso){
+  const d = new Date(iso);
+  return d.toLocaleString("en-US", {month:"short", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit"});
+}
+document.getElementById("lastUpdated").textContent = "Finance data last updated: " + formatLastUpdated(FINANCE_LAST_UPDATED);
 
 const STORAGE_KEY = "remnant_youth_roster_edits_v1";
 function loadEdits(){
@@ -936,6 +1132,9 @@ function render(){
     const payClass = item.payment === "STEP UP" ? "pay-STEP" : "pay-Self";
     const badges = item.programs.map(p=>`<span class="badge ${programBadgeClass(p)}">${p}</span>`).join("");
     const telHref = "tel:" + item.phone.replace(/[^0-9+]/g,'');
+    const fin = getFinance(item.id);
+    const owedCls = fin.none ? "owed-none" : (fin.owed > 0 ? "owed-due" : "owed-zero");
+    const owedText = fin.none ? "No invoices yet" : ("$" + fin.owed.toFixed(2) + " owed");
 
     const card = document.createElement("div");
     card.className = "card" + (isOpen ? " expanded" : "") + (row.active === "No" ? " inactive" : "");
@@ -954,6 +1153,7 @@ function render(){
         </div>
       </div>
       <div class="badges">${badges}</div>
+      <div class="owed-row"><span class="owed-label">Balance</span><span class="owed-amt ${owedCls}">${owedText}</span></div>
       <div class="contact-row">
         <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
         <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
@@ -1075,6 +1275,85 @@ sortPanel.querySelectorAll(".sort-opt").forEach(opt=>{
     }
     render();
   });
+});
+
+const RECENT_ACTIVITY = [
+  {"date":"2026-08-03","name":"Katina Clark","amount":415.00},
+  {"date":"2026-08-03","name":"Gabriela Cruz","amount":1610.00},
+  {"date":"2026-08-03","name":"Isaac Zechmann","amount":240.00},
+  {"date":"2026-08-03","name":"Liannie Rodriguez","amount":240.00},
+  {"date":"2026-08-03","name":"Nicole Rodriguez","amount":790.00},
+  {"date":"2026-07-31","name":"Nicole Rodriguez","amount":410.00},
+  {"date":"2026-07-29","name":"Yalitza Soto","amount":400.00},
+  {"date":"2026-07-24","name":"Selena Khedekar","amount":240.00},
+  {"date":"2026-07-24","name":"Angey Rogers","amount":240.00},
+  {"date":"2026-07-24","name":"Katherine Ramirez","amount":240.00},
+  {"date":"2026-07-24","name":"Yalitza Soto","amount":680.00},
+  {"date":"2026-07-24","name":"Vanessa Theriault","amount":240.00}
+];
+
+function money(n){ return "$" + n.toFixed(2); }
+
+function renderFinance(){
+  const withFin = ROSTER.filter(item => !getFinance(item.id).none);
+
+  let totalBilled = 0, totalPaid = 0, totalOwed = 0;
+  withFin.forEach(item=>{
+    const f = getFinance(item.id);
+    totalBilled += f.billed; totalPaid += f.paid; totalOwed += f.owed;
+  });
+
+  document.getElementById("finBilled").textContent = money(totalBilled);
+  document.getElementById("finPaid").textContent = money(totalPaid);
+  document.getElementById("finOwed").textContent = money(totalOwed);
+
+  // By program
+  const progs = ["RYLA","Remnant Kids","3x3 Basketball","Other"];
+  const progHtml = progs.map(p=>{
+    const items = withFin.filter(i=>i.programs.includes(p));
+    if(!items.length) return "";
+    let billed=0, paid=0, owed=0;
+    items.forEach(i=>{ const f=getFinance(i.id); billed+=f.billed; paid+=f.paid; owed+=f.owed; });
+    return `<div class="fin-prog-row"><span class="fp-name">${p}</span><span class="fp-nums">${money(paid)} paid / ${money(owed)} owed</span></div>`;
+  }).join("");
+  document.getElementById("finPrograms").innerHTML = progHtml || `<div class="fin-empty">No program data yet.</div>`;
+
+  // Families ranked by amount owed
+  const famMap = {};
+  withFin.forEach(item=>{
+    const f = getFinance(item.id);
+    if(f.owed <= 0) return;
+    if(!famMap[item.parent]) famMap[item.parent] = {owed:0, students:[]};
+    famMap[item.parent].owed += f.owed;
+    famMap[item.parent].students.push(item.student + " (" + money(f.owed) + ")");
+  });
+  const famList = Object.keys(famMap).map(name=>({name, ...famMap[name]})).sort((a,b)=>b.owed-a.owed);
+  document.getElementById("finFamCount").textContent = famList.length;
+  document.getElementById("finFamilies").innerHTML = famList.length ? famList.map(f=>`
+    <div class="fin-fam-row">
+      <div class="fin-fam-top"><span class="fin-fam-name">${f.name}</span><span class="fin-fam-owed">${money(f.owed)}</span></div>
+      <div class="fin-fam-students">${f.students.join(" · ")}</div>
+    </div>
+  `).join("") : `<div class="fin-empty">Nobody owes a balance right now 🎉</div>`;
+
+  // Recent activity
+  document.getElementById("finActivity").innerHTML = RECENT_ACTIVITY.map(a=>`
+    <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
+  `).join("");
+}
+
+document.getElementById("btnRosterView").addEventListener("click", ()=>{
+  document.getElementById("btnRosterView").classList.add("active");
+  document.getElementById("btnFinanceView").classList.remove("active");
+  document.getElementById("rosterView").classList.remove("hidden");
+  document.getElementById("financeView").classList.remove("open");
+});
+document.getElementById("btnFinanceView").addEventListener("click", ()=>{
+  document.getElementById("btnFinanceView").classList.add("active");
+  document.getElementById("btnRosterView").classList.remove("active");
+  document.getElementById("rosterView").classList.add("hidden");
+  document.getElementById("financeView").classList.add("open");
+  renderFinance();
 });
 
 render();
