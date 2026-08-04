@@ -1061,8 +1061,6 @@ function getRow(idOrItem){
   const e = edits[id] || {};
   return {
     paidThrough: e.paidThrough !== undefined ? e.paidThrough : (rosterItem.defaultPaidThrough || ""),
-    invoiceSent: e.invoiceSent || rosterItem.defaultInvoiceSent || "No",
-    paid: e.paid || rosterItem.defaultPaid || "No",
     notes: e.notes !== undefined ? e.notes : "",
     active: e.active || "Yes"
   };
@@ -1072,14 +1070,16 @@ function updateEdit(id, field, value){
   edits[id][field] = value;
   saveEdits(edits);
 }
-function statusInfo(row){
-  if(row.paid === "Yes") return {text:"Paid", cls:"status-paid"};
-  if(row.invoiceSent === "Yes") return {text:"Invoice sent, unpaid", cls:"status-invoiced"};
-  return {text:"Needs invoice", cls:"status-needs"};
+// Payment status is now driven entirely by Wix invoice data (FINANCE), not manual toggles.
+function statusInfo(id){
+  const fin = getFinance(id);
+  if(fin.none) return {text:"Needs invoice", cls:"status-needs"};
+  if(fin.owed <= 0) return {text:"Paid", cls:"status-paid"};
+  return {text:"Invoice sent, unpaid", cls:"status-invoiced"};
 }
 function refreshSummary(card, id){
   const row = getRow({id});
-  const info = statusInfo(row);
+  const info = statusInfo(id);
   const btn = card.querySelector(".toggle-summary");
   btn.classList.remove("status-paid","status-invoiced","status-needs");
   btn.classList.add(info.cls);
@@ -1133,8 +1133,8 @@ function render(){
     const badges = item.programs.map(p=>`<span class="badge ${programBadgeClass(p)}">${p}</span>`).join("");
     const telHref = "tel:" + item.phone.replace(/[^0-9+]/g,'');
     const fin = getFinance(item.id);
-    const owedCls = fin.none ? "owed-none" : (fin.owed > 0 ? "owed-due" : "owed-zero");
-    const owedText = fin.none ? "No invoices yet" : ("$" + fin.owed.toFixed(2) + " owed");
+    const owedCls = fin.owed > 0 ? "owed-due" : "owed-zero";
+    const owedText = money(fin.owed);
 
     const card = document.createElement("div");
     card.className = "card" + (isOpen ? " expanded" : "") + (row.active === "No" ? " inactive" : "");
@@ -1158,8 +1158,8 @@ function render(){
         <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
         <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
       </div>
-      <button class="toggle-summary ${statusInfo(row).cls}" data-toggle="${item.id}">
-        <span>${statusInfo(row).text}${row.paidThrough ? " · Through " + row.paidThrough : ""}</span>
+      <button class="toggle-summary ${statusInfo(item.id).cls}" data-toggle="${item.id}">
+        <span>${statusInfo(item.id).text}${row.paidThrough ? " · Through " + row.paidThrough : ""}</span>
         <span class="chev">▾</span>
       </button>
       <div class="details">
@@ -1168,24 +1168,10 @@ function render(){
           <input type="text" data-id="${item.id}" data-field="paidThrough" placeholder="e.g. Aug 2026" value="${row.paidThrough}">
         </div>
         <div class="field">
-          <label>Invoice Sent?</label>
-          <div class="yn-group" data-yn="invoiceSent" data-id="${item.id}">
-            <button type="button" class="yn-btn ${row.invoiceSent==='Yes'?'yes-active':''}" data-val="Yes">Yes</button>
-            <button type="button" class="yn-btn ${row.invoiceSent==='No'?'no-active':''}" data-val="No">No</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Paid?</label>
-          <div class="yn-group" data-yn="paid" data-id="${item.id}">
-            <button type="button" class="yn-btn ${row.paid==='Yes'?'yes-active':''}" data-val="Yes">Yes</button>
-            <button type="button" class="yn-btn ${row.paid==='No'?'no-active':''}" data-val="No">No</button>
-          </div>
-        </div>
-        <div class="field">
           <label>Notes</label>
           <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
         </div>
-        <div class="detail-note">Original enrollment: ${item.detail}</div>
+        <div class="detail-note">Payment status is pulled automatically from Wix invoices. Original enrollment: ${item.detail}</div>
       </div>
     `;
     container.appendChild(card);
@@ -1218,22 +1204,6 @@ function render(){
       if(field === "paidThrough"){
         refreshSummary(e.target.closest(".card"), id);
       }
-    });
-  });
-
-  container.querySelectorAll(".yn-group").forEach(group=>{
-    group.querySelectorAll(".yn-btn").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const id = group.getAttribute("data-id");
-        const field = group.getAttribute("data-yn");
-        const val = btn.getAttribute("data-val");
-        updateEdit(id, field, val);
-        group.querySelectorAll(".yn-btn").forEach(b=>{
-          b.classList.remove("yes-active","no-active");
-        });
-        btn.classList.add(val === "Yes" ? "yes-active" : "no-active");
-        refreshSummary(group.closest(".card"), id);
-      });
     });
   });
 
