@@ -174,7 +174,31 @@
     border:1px solid var(--border);
     box-shadow:0 1px 2px rgba(0,0,0,0.04);
     overflow:hidden;
+    position:relative;
+    height:340px;
+    perspective:1400px;
   }
+  .stu-flip-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform .55s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .card.flipped .stu-flip-inner{transform:rotateY(180deg);}
+  .stu-face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+    background:var(--card);
+  }
+  .stu-back{transform:rotateY(180deg);padding:16px;}
+  .stu-back-header{font-size:16px;font-weight:bold;color:var(--text);margin-bottom:2px;}
+  .back-flip-bar{margin-top:auto;}
   .card-top{
     padding:14px 14px 10px 14px;
     display:flex;
@@ -294,15 +318,7 @@
   .toggle-summary.status-needs{background:var(--yellow-bg);color:var(--yellow);}
   .toggle-summary .chev{transition:transform .15s;font-size:12px;color:inherit;opacity:0.65;}
   .toggle-summary .hint{display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:bold;opacity:0.65;}
-  .card.expanded .toggle-summary .chev{transform:rotate(180deg);}
-
-  .details{
-    display:none;
-    padding:14px;
-    border-top:1px solid var(--border);
-    background:#fafbfc;
-  }
-  .card.expanded .details{display:block;}
+  .toggle-summary{margin-top:auto;}
 
   .field{margin-bottom:12px;}
   .field:last-child{margin-bottom:0;}
@@ -387,8 +403,8 @@
   .prog-flip.flipped .prog-flip-inner{transform:rotateY(180deg);}
   .prog-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04);padding:16px;display:flex;flex-direction:column;}
   .prog-back{transform:rotateY(180deg);}
-  .prog-title{font-size:16px;font-weight:bold;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .prog-title .badge{font-size:10.5px;}
+  .prog-title{font-size:17px;font-weight:bold;color:var(--text);margin-bottom:12px;}
+  .fin-main-title{font-size:15px;font-weight:bold;color:var(--text);margin:4px 4px 10px 4px;}
   .prog-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
   .prog-stat{background:#f7f8fa;border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;justify-content:center;}
   .prog-stat .ps-label{font-size:10px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:3px;}
@@ -463,6 +479,7 @@
 </div>
 
 <div id="financeView">
+  <div class="fin-main-title">All Remnant Youth Programs</div>
   <div class="fin-summary">
     <div class="fin-stat"><div class="fin-label">Total Billed</div><div class="fin-value" id="finBilled">$0.00</div></div>
     <div class="fin-stat fin-paid"><div class="fin-label">Total Paid</div><div class="fin-value" id="finPaid">$0.00</div></div>
@@ -1081,7 +1098,7 @@ function saveEdits(edits){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(edits)); }catch(e){}
 }
 let edits = loadEdits();
-let expandedIds = new Set();
+let flippedStudentId = null; // only one student card flipped open at a time
 
 let state = { filter:"All", search:"", sortKey:"student", sortDir:1 };
 
@@ -1153,7 +1170,7 @@ function render(){
 
   list.forEach(item=>{
     const row = getRow(item);
-    const isOpen = expandedIds.has(item.id);
+    const isFlipped = String(item.id) === String(flippedStudentId);
     const payClass = item.payment === "STEP UP" ? "pay-STEP" : "pay-Self";
     const badges = item.programs.map(p=>`<span class="badge ${programBadgeClass(p)}">${p}</span>`).join("");
     const digits = item.phone.replace(/[^0-9+]/g,'');
@@ -1164,38 +1181,46 @@ function render(){
     const owedText = money(fin.owed);
 
     const card = document.createElement("div");
-    card.className = "card" + (isOpen ? " expanded" : "") + (row.active === "No" ? " inactive" : "");
+    card.className = "card" + (isFlipped ? " flipped" : "") + (row.active === "No" ? " inactive" : "");
     card.innerHTML = `
-      <div class="card-top">
-        <div>
-          <p class="student-name">${item.student} <span class="pay-badge ${payClass}">${item.payment}</span></p>
-          <p class="parent-name">${item.parent}</p>
+      <div class="stu-flip-inner">
+        <div class="stu-face stu-front">
+          <div class="card-top">
+            <div>
+              <p class="student-name">${item.student} <span class="pay-badge ${payClass}">${item.payment}</span></p>
+              <p class="parent-name">${item.parent}</p>
+            </div>
+            <div class="active-toggle">
+              <span class="active-label">Active</span>
+              <label class="ios-switch">
+                <input type="checkbox" data-id="${item.id}" data-field="active" ${row.active === "Yes" ? "checked" : ""}>
+                <span class="ios-switch-track"></span>
+              </label>
+            </div>
+          </div>
+          <div class="badges">${badges}</div>
+          <div class="owed-row"><span class="owed-label">Balance</span><span class="owed-amt ${owedCls}">${owedText}</span></div>
+          <div class="contact-row">
+            <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
+            <a class="contact-btn" href="${smsHref}"><span class="ic">💬</span> Text</a>
+            <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
+          </div>
+          <button class="toggle-summary ${statusInfo(item.id).cls}" data-toggle="${item.id}">
+            <span>${statusInfo(item.id).text}</span>
+            <span class="hint">Notes <span class="chev">▾</span></span>
+          </button>
         </div>
-        <div class="active-toggle">
-          <span class="active-label">Active</span>
-          <label class="ios-switch">
-            <input type="checkbox" data-id="${item.id}" data-field="active" ${row.active === "Yes" ? "checked" : ""}>
-            <span class="ios-switch-track"></span>
-          </label>
+        <div class="stu-face stu-back">
+          <div class="stu-back-header">${item.student}</div>
+          <div class="field">
+            <label>Notes</label>
+            <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
+          </div>
+          <div class="detail-note">Payment status is pulled automatically from Wix invoices. Original enrollment: ${item.detail}</div>
+          <button class="toggle-summary back-flip-bar" data-toggle="${item.id}">
+            <span class="hint">← Tap to flip back</span>
+          </button>
         </div>
-      </div>
-      <div class="badges">${badges}</div>
-      <div class="owed-row"><span class="owed-label">Balance</span><span class="owed-amt ${owedCls}">${owedText}</span></div>
-      <div class="contact-row">
-        <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
-        <a class="contact-btn" href="${smsHref}"><span class="ic">💬</span> Text</a>
-        <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
-      </div>
-      <button class="toggle-summary ${statusInfo(item.id).cls}" data-toggle="${item.id}">
-        <span>${statusInfo(item.id).text}</span>
-        <span class="hint">Notes <span class="chev">▾</span></span>
-      </button>
-      <div class="details">
-        <div class="field">
-          <label>Notes</label>
-          <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
-        </div>
-        <div class="detail-note">Payment status is pulled automatically from Wix invoices. Original enrollment: ${item.detail}</div>
       </div>
     `;
     container.appendChild(card);
@@ -1211,12 +1236,20 @@ function render(){
     });
   });
 
-  container.querySelectorAll(".toggle-summary").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
+  container.querySelectorAll('[data-toggle]').forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
       const id = btn.getAttribute("data-toggle");
       const card = btn.closest(".card");
-      if(expandedIds.has(id)){ expandedIds.delete(id); card.classList.remove("expanded"); }
-      else { expandedIds.add(id); card.classList.add("expanded"); }
+      const wasFlipped = card.classList.contains("flipped");
+      // only one card open at a time
+      container.querySelectorAll(".card.flipped").forEach(c=>c.classList.remove("flipped"));
+      if(wasFlipped){
+        flippedStudentId = null;
+      } else {
+        card.classList.add("flipped");
+        flippedStudentId = id;
+      }
     });
   });
 
@@ -1311,7 +1344,7 @@ function monthLabel(key){
   return new Date(y, m-1, 1).toLocaleString("en-US", {month:"long", year:"numeric"});
 }
 
-let flippedPrograms = new Set();
+let flippedProgram = null; // only one program card flipped open at a time
 let openMonths = null; // lazily initialized to the most recent month
 
 function renderFinance(){
@@ -1353,10 +1386,10 @@ function renderFinance(){
     `).join("") : `<div class="prog-owed-empty">Nobody owes a balance in ${p} 🎉</div>`;
 
     return `
-      <div class="prog-flip${flippedPrograms.has(p) ? ' flipped' : ''}" data-prog="${p}">
+      <div class="prog-flip${p === flippedProgram ? ' flipped' : ''}" data-prog="${p}">
         <div class="prog-flip-inner">
           <div class="prog-face prog-front">
-            <div class="prog-title"><span class="badge ${programBadgeClass(p)}">${p}</span></div>
+            <div class="prog-title">${p}</div>
             <div class="prog-stats-grid">
               <div class="prog-stat"><span class="ps-label">Billed</span><span class="ps-value">${money(billed)}</span></div>
               <div class="prog-stat ps-paid"><span class="ps-label">Paid</span><span class="ps-value">${money(paid)}</span></div>
@@ -1378,9 +1411,15 @@ function renderFinance(){
   document.querySelectorAll(".prog-flip").forEach(card=>{
     card.addEventListener("click", ()=>{
       const p = card.getAttribute("data-prog");
-      card.classList.toggle("flipped");
-      if(card.classList.contains("flipped")) flippedPrograms.add(p);
-      else flippedPrograms.delete(p);
+      const wasFlipped = card.classList.contains("flipped");
+      // only one program card open at a time
+      document.querySelectorAll(".prog-flip.flipped").forEach(c=>c.classList.remove("flipped"));
+      if(wasFlipped){
+        flippedProgram = null;
+      } else {
+        card.classList.add("flipped");
+        flippedProgram = p;
+      }
     });
   });
 
