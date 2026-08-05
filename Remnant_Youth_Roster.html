@@ -576,10 +576,11 @@ const ROSTER = [
     "phone": "+1 813-469-7155",
     "email": "thebarfields2012@gmail.com",
     "programs": [
-      "3x3 Basketball"
+      "3x3 Basketball",
+      "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "From enrollment form: 3on3 Live (3x3 Basketball Training)",
+    "detail": "From enrollment form: 3on3 Live (3x3 Basketball Training). Added RYLA 2026-08-05 — invoice sent for $415 (tuition $240 + supply fee $100 + registration fee $75).",
     "defaultGrade": "7th Grade",
     "default3x3PlayLab": "Yes",
     "default3x3OneOnOne": "No",
@@ -1183,23 +1184,66 @@ const ROSTER = [
     "default3x3PlayLab": "Yes",
     "default3x3OneOnOne": "No",
     "id": 43
+  },
+  {
+    "student": "Sophie Barfield",
+    "parent": "Tiffany Barfield",
+    "phone": "+1 813-469-7155",
+    "email": "thebarfields2012@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "Sibling of Aaron Barfield, same contact info. Added by Kevin 2026-08-05, no enrollment form on file yet — invoice sent for $415 (tuition $240 + supply fee $100 + registration fee $75).",
+    "id": 44
+  },
+  {
+    "student": "Madelyn Barfield",
+    "parent": "Tiffany Barfield",
+    "phone": "+1 813-469-7155",
+    "email": "thebarfields2012@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "Sibling of Aaron Barfield, same contact info. Added by Kevin 2026-08-05, no enrollment form on file yet — invoice sent for $415 (tuition $240 + supply fee $100 + registration fee $75).",
+    "id": 45
+  },
+  {
+    "student": "Penelope Barfield",
+    "parent": "Tiffany Barfield",
+    "phone": "+1 813-469-7155",
+    "email": "thebarfields2012@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "Sibling of Aaron Barfield, same contact info. Added by Kevin 2026-08-05, no enrollment form on file yet — invoice sent for $415 (tuition $240 + supply fee $100 + registration fee $75).",
+    "id": 46
   }
 ];
 
 // Per-transaction (per-receipt) billed/paid amounts attributed to each student, pulled from
 // Wix Receipts. This lets both the roster balance badge (all-time) and the Finance dashboard's
 // month/year selector compute totals for whatever period is selected, instead of one fixed snapshot.
-const STUDENT_TRANSACTIONS = {"0":[{"date":"2026-05-06","billed":120,"paid":120}],"2":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}],"3":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120},{"date":"2026-04-26","billed":120,"paid":120}],"5":[{"date":"2026-07-29","billed":400,"paid":400},{"date":"2026-07-24","billed":746.67,"paid":746.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"6":[{"date":"2026-08-03","billed":415,"paid":207.5}],"7":[{"date":"2026-08-03","billed":415,"paid":207.5}],"8":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"11":[{"date":"2026-05-21","billed":240,"paid":240},{"date":"2026-03-23","billed":230,"paid":230},{"date":"2026-07-24","billed":240,"paid":240}],"15":[{"date":"2026-04-26","billed":120,"paid":120},{"date":"2026-08-03","billed":240,"paid":240},{"date":"2026-05-14","billed":120,"paid":120},{"date":"2026-07-24","billed":240,"paid":240}],"16":[{"date":"2026-08-03","billed":180,"paid":180}],"18":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"19":[{"date":"2026-08-03","billed":715,"paid":715}],"20":[{"date":"2026-08-03","billed":715,"paid":715}],"22":[{"date":"2026-08-03","billed":315,"paid":240}],"24":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"27":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"30":[{"date":"2026-07-24","billed":240,"paid":240}],"32":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120}],"34":[{"date":"2026-03-26","billed":655,"paid":495},{"date":"2026-05-21","billed":655,"paid":160}],"38":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"39":[{"date":"2026-05-21","billed":480,"paid":480}],"40":[{"date":"2026-07-24","billed":240,"paid":240}],"41":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}]};
+const STUDENT_TRANSACTIONS = {"0":[{"date":"2026-05-06","billed":120,"paid":120,"program":"3x3 Basketball"},{"date":"2026-08-05","billed":415,"paid":0,"program":"RYLA"}],"44":[{"date":"2026-08-05","billed":415,"paid":0,"program":"RYLA"}],"45":[{"date":"2026-08-05","billed":415,"paid":0,"program":"Remnant Kids"}],"46":[{"date":"2026-08-05","billed":415,"paid":0,"program":"Remnant Kids"}],"2":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}],"3":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120},{"date":"2026-04-26","billed":120,"paid":120}],"5":[{"date":"2026-07-29","billed":400,"paid":400},{"date":"2026-07-24","billed":746.67,"paid":746.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"6":[{"date":"2026-08-03","billed":415,"paid":207.5}],"7":[{"date":"2026-08-03","billed":415,"paid":207.5}],"8":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"11":[{"date":"2026-05-21","billed":240,"paid":240},{"date":"2026-03-23","billed":230,"paid":230},{"date":"2026-07-24","billed":240,"paid":240}],"15":[{"date":"2026-04-26","billed":120,"paid":120},{"date":"2026-08-03","billed":240,"paid":240},{"date":"2026-05-14","billed":120,"paid":120},{"date":"2026-07-24","billed":240,"paid":240}],"16":[{"date":"2026-08-03","billed":180,"paid":180}],"18":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"19":[{"date":"2026-08-03","billed":715,"paid":715}],"20":[{"date":"2026-08-03","billed":715,"paid":715}],"22":[{"date":"2026-08-03","billed":315,"paid":240}],"24":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"27":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"30":[{"date":"2026-07-24","billed":240,"paid":240}],"32":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120}],"34":[{"date":"2026-03-26","billed":655,"paid":495},{"date":"2026-05-21","billed":655,"paid":160}],"38":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"39":[{"date":"2026-05-21","billed":480,"paid":480}],"40":[{"date":"2026-07-24","billed":240,"paid":240}],"41":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}]};
 
-const FINANCE_LAST_UPDATED = "2026-08-04T16:44:37Z";
+const FINANCE_LAST_UPDATED = "2026-08-05T00:00:00Z";
 
 function round2(n){ return Math.round(n * 100) / 100; }
 
 // monthKey: "YYYY-MM" to scope to one month, or null/"ALL" for all-time.
-function computeFinance(id, monthKey){
+// program (optional): scope to one program's transactions only. Transactions tagged with a
+// "program" only count toward that program; untagged transactions (all older data, before a
+// student could have per-program invoices) count toward every program that student is in, same
+// as before — so this stays backward-compatible for every student except newly multi-program ones.
+function computeFinance(id, monthKey, program){
   const txns = STUDENT_TRANSACTIONS[String(id)] || [];
   if(txns.length === 0) return {billed:0, paid:0, owed:0, none:true};
-  const filtered = (monthKey == null || monthKey === "ALL") ? txns : txns.filter(t => t.date.slice(0,7) === monthKey);
+  let filtered = (monthKey == null || monthKey === "ALL") ? txns : txns.filter(t => t.date.slice(0,7) === monthKey);
+  if(program){
+    filtered = filtered.filter(t => !t.program || t.program === program);
+  }
   const billed = round2(filtered.reduce((s,t)=>s+t.billed,0));
   const paid = round2(filtered.reduce((s,t)=>s+t.paid,0));
   return {billed, paid, owed: round2(billed-paid), none:false};
@@ -1605,7 +1649,7 @@ function renderFinance(){
     let billed=0, paid=0, owed=0;
     const famMap = {};
     items.forEach(i=>{
-      const f = computeFinance(i.id, financeMonth);
+      const f = computeFinance(i.id, financeMonth, p);
       billed += f.billed; paid += f.paid; owed += f.owed;
       if(f.owed > 0){
         if(!famMap[i.parent]) famMap[i.parent] = {billed:0, owed:0};
