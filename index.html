@@ -103,11 +103,14 @@
 
   .chip-row{
     display:flex;
-    gap:8px;
+    gap:7px;
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
     padding-bottom:8px;
+    padding-right:20px;
     scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right, black 0%, black 90%, transparent 100%);
+    mask-image:linear-gradient(to right, black 0%, black 90%, transparent 100%);
   }
   .chip-row::-webkit-scrollbar{display:none;}
   .chip{
@@ -115,9 +118,9 @@
     border:1.5px solid var(--navy);
     background:#fff;
     color:var(--navy);
-    padding:9px 14px;
+    padding:8px 12px;
     border-radius:20px;
-    font-size:13.5px;
+    font-size:12.5px;
     font-weight:bold;
     white-space:nowrap;
   }
