@@ -380,6 +380,38 @@
   .fin-fam-students{font-size:12px;color:var(--muted);margin-top:4px;}
   .fin-empty{text-align:center;color:var(--muted);font-size:13px;padding:20px;}
   .fin-note{font-size:11.5px;color:var(--muted);line-height:1.5;padding:8px 4px 0 4px;}
+
+  /* Program flip cards */
+  .prog-flip{perspective:1400px;margin-bottom:14px;height:236px;cursor:pointer;}
+  .prog-flip-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
+  .prog-flip.flipped .prog-flip-inner{transform:rotateY(180deg);}
+  .prog-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04);padding:16px;display:flex;flex-direction:column;}
+  .prog-back{transform:rotateY(180deg);}
+  .prog-title{font-size:16px;font-weight:bold;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .prog-title .badge{font-size:10.5px;}
+  .prog-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
+  .prog-stat{background:#f7f8fa;border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;justify-content:center;}
+  .prog-stat .ps-label{font-size:10px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:3px;}
+  .prog-stat .ps-value{font-size:16.5px;font-weight:bold;color:var(--text);}
+  .prog-stat.ps-owed .ps-value{color:var(--red);}
+  .prog-stat.ps-paid .ps-value{color:var(--green);}
+  .prog-tap-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;opacity:0.8;}
+  .prog-owed-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;}
+  .prog-owed-row{display:flex;justify-content:space-between;align-items:baseline;background:#f7f8fa;border-radius:8px;padding:8px 10px;font-size:13px;}
+  .prog-owed-row .pw-name{font-weight:bold;color:var(--text);}
+  .prog-owed-row .pw-nums{text-align:right;}
+  .prog-owed-row .pw-owed{color:var(--red);font-weight:bold;}
+  .prog-owed-row .pw-billed{color:var(--muted);font-size:11px;display:block;}
+  .prog-owed-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;}
+
+  /* Activity by month */
+  .activity-month{margin-bottom:8px;}
+  .activity-month-header{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:bold;color:var(--text);}
+  .activity-month-header .am-chev{font-size:12px;color:var(--muted);transition:transform .15s;}
+  .activity-month.open .am-chev{transform:rotate(180deg);}
+  .activity-month-header .am-total{font-weight:normal;color:var(--muted);font-size:12px;}
+  .activity-entries{display:none;flex-direction:column;gap:6px;margin-top:6px;}
+  .activity-month.open .activity-entries{display:flex;}
 </style>
 </head>
 <body>
@@ -1237,21 +1269,50 @@ sortPanel.querySelectorAll(".sort-opt").forEach(opt=>{
 });
 
 const RECENT_ACTIVITY = [
-  {"date":"2026-08-03","name":"Katina Clark","amount":415.00},
-  {"date":"2026-08-03","name":"Gabriela Cruz","amount":1610.00},
-  {"date":"2026-08-03","name":"Isaac Zechmann","amount":240.00},
-  {"date":"2026-08-03","name":"Liannie Rodriguez","amount":240.00},
-  {"date":"2026-08-03","name":"Nicole Rodriguez","amount":790.00},
-  {"date":"2026-07-31","name":"Nicole Rodriguez","amount":410.00},
-  {"date":"2026-07-29","name":"Yalitza Soto","amount":400.00},
-  {"date":"2026-07-24","name":"Selena Khedekar","amount":240.00},
-  {"date":"2026-07-24","name":"Angey Rogers","amount":240.00},
-  {"date":"2026-07-24","name":"Katherine Ramirez","amount":240.00},
-  {"date":"2026-07-24","name":"Yalitza Soto","amount":680.00},
-  {"date":"2026-07-24","name":"Vanessa Theriault","amount":240.00}
+  {"date":"2026-08-03","name":"Katina Clark","amount":415.0},
+  {"date":"2026-08-03","name":"Gabriela Cruz","amount":1610.0},
+  {"date":"2026-08-03","name":"Isaac Zechmann","amount":240.0},
+  {"date":"2026-08-03","name":"Liannie Rodriguez","amount":240.0},
+  {"date":"2026-08-03","name":"Nicole Rodriguez","amount":790.0},
+  {"date":"2026-07-31","name":"Nicole Rodriguez","amount":410.0},
+  {"date":"2026-07-29","name":"Yalitza Soto","amount":400.0},
+  {"date":"2026-07-24","name":"Selena Khedekar","amount":240.0},
+  {"date":"2026-07-24","name":"Angey Rogers","amount":240.0},
+  {"date":"2026-07-24","name":"Katherine Ramirez","amount":240.0},
+  {"date":"2026-07-24","name":"Yalitza Soto","amount":680.0},
+  {"date":"2026-07-24","name":"Vanessa Theriault","amount":240.0},
+  {"date":"2026-07-24","name":"Katherine Ramirez","amount":240.0},
+  {"date":"2026-07-24","name":"Yalitza Soto","amount":1400.0},
+  {"date":"2026-07-24","name":"Liannie Rodriguez","amount":240.0},
+  {"date":"2026-07-24","name":"Amy Williams","amount":240.0},
+  {"date":"2026-07-24","name":"Nicole Rodriguez","amount":720.0},
+  {"date":"2026-05-21","name":"Sarah Fenton","amount":480.0},
+  {"date":"2026-05-21","name":"Vanessa Theriault","amount":240.0},
+  {"date":"2026-05-21","name":"Christyn Hamel","amount":160.0},
+  {"date":"2026-05-18","name":"Meghan Ten Brink","amount":120.0},
+  {"date":"2026-05-18","name":"Meghan Ten Brink","amount":120.0},
+  {"date":"2026-05-18","name":"Meghan Ten Brink","amount":120.0},
+  {"date":"2026-05-14","name":"Liannie Rodriguez","amount":120.0},
+  {"date":"2026-05-06","name":"Amy Williams","amount":120.0},
+  {"date":"2026-05-06","name":"Tiffany Barfield","amount":120.0},
+  {"date":"2026-05-06","name":"Katherine Ramirez","amount":120.0},
+  {"date":"2026-04-26","name":"Liannie Rodriguez","amount":120.0},
+  {"date":"2026-04-26","name":"Amy Williams","amount":120.0},
+  {"date":"2026-04-26","name":"Meghan Ten Brink","amount":120.0},
+  {"date":"2026-03-26","name":"Christyn Hamel","amount":495.0},
+  {"date":"2026-03-23","name":"Vanessa Theriault","amount":230.0},
+  {"date":"2026-03-04","name":"Meghan Ten Brink","amount":240.0}
 ];
 
 function money(n){ return "$" + n.toFixed(2); }
+function monthKey(dateStr){ return dateStr.slice(0,7); } // "YYYY-MM"
+function monthLabel(key){
+  const [y,m] = key.split("-").map(Number);
+  return new Date(y, m-1, 1).toLocaleString("en-US", {month:"long", year:"numeric"});
+}
+
+let flippedPrograms = new Set();
+let openMonths = null; // lazily initialized to the most recent month
 
 function renderFinance(){
   const withFin = ROSTER.filter(item => !getFinance(item.id).none);
@@ -1266,16 +1327,62 @@ function renderFinance(){
   document.getElementById("finPaid").textContent = money(totalPaid);
   document.getElementById("finOwed").textContent = money(totalOwed);
 
-  // By program
+  // By program — flip cards
   const progs = ["RYLA","Remnant Kids","3x3 Basketball","Tutoring","Other"];
   const progHtml = progs.map(p=>{
     const items = withFin.filter(i=>i.programs.includes(p));
     if(!items.length) return "";
     let billed=0, paid=0, owed=0;
-    items.forEach(i=>{ const f=getFinance(i.id); billed+=f.billed; paid+=f.paid; owed+=f.owed; });
-    return `<div class="fin-prog-row"><span class="fp-name">${p}</span><span class="fp-nums">${money(paid)} paid / ${money(owed)} owed</span></div>`;
+    const famMap = {};
+    items.forEach(i=>{
+      const f = getFinance(i.id);
+      billed += f.billed; paid += f.paid; owed += f.owed;
+      if(f.owed > 0){
+        if(!famMap[i.parent]) famMap[i.parent] = {billed:0, owed:0};
+        famMap[i.parent].billed += f.billed;
+        famMap[i.parent].owed += f.owed;
+      }
+    });
+    const owingFamilies = Object.keys(famMap).map(name=>({name, ...famMap[name]})).sort((a,b)=>b.owed-a.owed);
+    const detailed = owingFamilies.length <= 4;
+    const backRows = owingFamilies.length ? owingFamilies.map(f=>`
+      <div class="prog-owed-row">
+        <span class="pw-name">${f.name}</span>
+        <span class="pw-nums">${detailed ? `<span class="pw-billed">${money(f.billed)} billed</span>` : ""}<span class="pw-owed">${money(f.owed)}</span></span>
+      </div>
+    `).join("") : `<div class="prog-owed-empty">Nobody owes a balance in ${p} 🎉</div>`;
+
+    return `
+      <div class="prog-flip${flippedPrograms.has(p) ? ' flipped' : ''}" data-prog="${p}">
+        <div class="prog-flip-inner">
+          <div class="prog-face prog-front">
+            <div class="prog-title"><span class="badge ${programBadgeClass(p)}">${p}</span></div>
+            <div class="prog-stats-grid">
+              <div class="prog-stat"><span class="ps-label">Billed</span><span class="ps-value">${money(billed)}</span></div>
+              <div class="prog-stat ps-paid"><span class="ps-label">Paid</span><span class="ps-value">${money(paid)}</span></div>
+              <div class="prog-stat ps-owed"><span class="ps-label">Owed</span><span class="ps-value">${money(owed)}</span></div>
+              <div class="prog-stat"><span class="ps-label">Families w/ Balance</span><span class="ps-value">${owingFamilies.length}</span></div>
+            </div>
+            <div class="prog-tap-hint">Tap to see who owes →</div>
+          </div>
+          <div class="prog-face prog-back">
+            <div class="prog-title">${p} — Balances Due</div>
+            <div class="prog-owed-list">${backRows}</div>
+            <div class="prog-tap-hint">← Tap to flip back</div>
+          </div>
+        </div>
+      </div>
+    `;
   }).join("");
   document.getElementById("finPrograms").innerHTML = progHtml || `<div class="fin-empty">No program data yet.</div>`;
+  document.querySelectorAll(".prog-flip").forEach(card=>{
+    card.addEventListener("click", ()=>{
+      const p = card.getAttribute("data-prog");
+      card.classList.toggle("flipped");
+      if(card.classList.contains("flipped")) flippedPrograms.add(p);
+      else flippedPrograms.delete(p);
+    });
+  });
 
   // Families ranked by amount owed
   const famMap = {};
@@ -1295,10 +1402,39 @@ function renderFinance(){
     </div>
   `).join("") : `<div class="fin-empty">Nobody owes a balance right now 🎉</div>`;
 
-  // Recent activity
-  document.getElementById("finActivity").innerHTML = RECENT_ACTIVITY.map(a=>`
-    <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
-  `).join("");
+  // Recent activity — grouped by month, most recent expanded
+  const byMonth = {};
+  RECENT_ACTIVITY.forEach(a=>{
+    const k = monthKey(a.date);
+    if(!byMonth[k]) byMonth[k] = [];
+    byMonth[k].push(a);
+  });
+  const monthKeys = Object.keys(byMonth).sort().reverse();
+  if(openMonths === null){
+    openMonths = new Set(monthKeys.length ? [monthKeys[0]] : []);
+  }
+  document.getElementById("finActivity").innerHTML = monthKeys.map(k=>{
+    const entries = byMonth[k];
+    const total = entries.reduce((s,a)=>s+a.amount,0);
+    const rows = entries.map(a=>`
+      <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
+    `).join("");
+    return `
+      <div class="activity-month${openMonths.has(k) ? ' open' : ''}" data-month="${k}">
+        <div class="activity-month-header"><span>${monthLabel(k)} <span class="am-total">· ${money(total)}</span></span><span class="am-chev">▾</span></div>
+        <div class="activity-entries">${rows}</div>
+      </div>
+    `;
+  }).join("");
+  document.querySelectorAll(".activity-month-header").forEach(header=>{
+    header.addEventListener("click", ()=>{
+      const section = header.closest(".activity-month");
+      const k = section.getAttribute("data-month");
+      section.classList.toggle("open");
+      if(section.classList.contains("open")) openMonths.add(k);
+      else openMonths.delete(k);
+    });
+  });
 }
 
 document.getElementById("btnRosterView").addEventListener("click", ()=>{
