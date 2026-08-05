@@ -456,6 +456,18 @@
   .prog-drawer-Other{background:#fec105;color:#0d1a00;}
   .prog-face-body{padding:16px;flex:1;display:flex;flex-direction:column;overflow-y:auto;}
   .fin-main-title{font-size:15px;font-weight:bold;color:var(--text);margin:4px 4px 10px 4px;}
+  .fin-period-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--navy);border-radius:12px;padding:12px 14px;margin:0 4px 14px 4px;}
+  .fin-period-label{font-size:12px;color:#cfe0f0;font-weight:bold;}
+  .fin-period-select{
+    background:var(--lime-text);
+    color:#0d1a00;
+    border:none;
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:14px;
+    font-weight:bold;
+    max-width:60%;
+  }
   .prog-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
   .prog-stat{background:#f7f8fa;border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;justify-content:center;}
   .prog-stat .ps-label{font-size:10px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:3px;}
@@ -531,6 +543,10 @@
 
 <div id="financeView">
   <div class="fin-main-title">All Remnant Youth Programs</div>
+  <div class="fin-period-row">
+    <span class="fin-period-label">Showing financials for</span>
+    <select id="financeMonthSelect" class="fin-period-select"></select>
+  </div>
   <div class="fin-summary">
     <div class="fin-stat"><div class="fin-label">Total Billed</div><div class="fin-value" id="finBilled">$0.00</div></div>
     <div class="fin-stat fin-paid"><div class="fin-label">Total Paid</div><div class="fin-value" id="finPaid">$0.00</div></div>
@@ -555,191 +571,21 @@
 <script>
 const ROSTER = [
   {
-    "id": 0,
-    "student": "EJ Roberts",
-    "parent": "KEvin Roberts",
-    "phone": "+1 904-616-9964",
-    "email": "kevroberts43@gmail.com",
-    "programs": [
-      "Remnant Kids"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August 5** = $240/ month",
-    "defaultGrade": "3rd Grade",
-    "defaultShirt": "Youth Small"
-  },
-  {
-    "id": 2,
-    "student": "Ronin Fenton",
-    "parent": "Sarah Fenton",
-    "phone": "+1 813-997-2448",
-    "email": "rafparents@gmail.com",
-    "programs": [
-      "Remnant Kids"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month",
-    "defaultGrade": "2nd Grade"
-  },
-  {
-    "id": 3,
-    "student": "Selena Khedekar",
-    "parent": "Sophia Khedekar / Aditya Khedekar",
-    "phone": "+1 978-407-3028",
-    "email": "sophia.anita8@gmail.com",
-    "programs": [
-      "Remnant Kids"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month; Remnant Virtual Classroom (Grades K-12)",
-    "defaultGrade": "Kindergarden"
-  },
-  {
-    "id": 4,
-    "student": "Zakariah Riggan",
-    "parent": "Darrell Lake / Nikki Lake",
-    "phone": "+1 813-610-3508",
-    "email": "darrell.lake88@gmail.com",
+    "student": "Aaron Barfield",
+    "parent": "Tiffany Barfield",
+    "phone": "+1 813-469-7155",
+    "email": "thebarfields2012@gmail.com",
     "programs": [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm = $240/ month",
+    "detail": "From enrollment form: 3on3 Live (3x3 Basketball Training)",
     "defaultGrade": "7th Grade",
     "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
+    "default3x3OneOnOne": "No",
+    "id": 0
   },
   {
-    "id": 5,
-    "student": "Milo Callihan",
-    "parent": "Courtney Bush / James Bush",
-    "phone": "+1 863-860-1102",
-    "email": "cplummer0528@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm",
-    "defaultGrade": "7th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 6,
-    "student": "Rebekah Conley",
-    "parent": "Wendy Conley",
-    "phone": "+1 813-244-7862",
-    "email": "wendyconley1@gmail.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy (Grades 6-12) - Fridays; RYLA Summer Academy (Grades 6-12) - June 8 - June 12",
-    "defaultGrade": "8th Grade"
-  },
-  {
-    "id": 7,
-    "student": "Elijah Rodriguez",
-    "parent": "Joel Rodriguez / Liannie Rodriguez",
-    "phone": "+1 321-287-0991",
-    "email": "joelrodriguez071989@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "Summer 3x3 Development Clinic (Grades 3-5) - June 22 - 25",
-    "defaultGrade": "3rd Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 8,
-    "student": "Cashton Ricci",
-    "parent": "Nicole Ferraro / Anthony Ricci",
-    "phone": "+1 262-806-2408",
-    "email": "nikkiricci29@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "Self-Pay",
-    "detail": "3x3 Basketball Training - (Thursdays)",
-    "defaultGrade": "3rd Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 9,
-    "student": "Brayden Ortiz",
-    "parent": "Yalitza Soto / Edwin Ortiz",
-    "phone": "+1 407-267-8294",
-    "email": "yalitzaortiz2003@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
-    "defaultGrade": "2nd Grade"
-  },
-  {
-    "id": 10,
-    "student": "Ayden Ortiz",
-    "parent": "Yalitza Soto / Edwin Ortiz",
-    "phone": "+1 407-267-8294",
-    "email": "yalitzaortiz2003@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
-    "defaultGrade": "2nd Grade"
-  },
-  {
-    "id": 11,
-    "student": "Jayden Ortiz",
-    "parent": "Yalitza Soto / Edwin Ortiz",
-    "phone": "+1 407-267-8294",
-    "email": "yalitzaortiz2003@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays)",
-    "defaultGrade": "6th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "Yes"
-  },
-  {
-    "id": 12,
-    "student": "Noah Stream",
-    "parent": "Julie Smallwood",
-    "phone": "+1 815-979-3273",
-    "email": "juliesmallwood3@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
-    "defaultGrade": "1st Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 13,
-    "student": "Greyson Stream",
-    "parent": "Julie Smallwood",
-    "phone": "+1 815-979-3273",
-    "email": "juliesmallwood3@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
-    "defaultGrade": "4th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 14,
     "student": "Abram McHenry",
     "parent": "Alisha McHenry",
     "phone": "+1 813-838-5451",
@@ -748,286 +594,23 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist - (May 1)",
-    "defaultGrade": "2nd Grade"
+    "detail": "From enrollment form: Painting With A Twist - (May 1)",
+    "defaultGrade": "2nd Grade",
+    "id": 1
   },
   {
-    "id": 15,
-    "student": "Brayson Amerman",
-    "parent": "Michelle Amerman / Debra Amerman",
-    "phone": "+1 813-309-2520",
-    "email": "deberma@gmail.com",
+    "student": "Amelia Rodriguez",
+    "parent": "Nicole Rodriguez",
+    "phone": "",
+    "email": "rodriguezfamily016@gmail.com",
     "programs": [
-      "Other"
+      "Remnant Kids"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist - (May 1)",
-    "defaultGrade": "2nd Grade"
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Tutoring only on Wix invoices",
+    "id": 2
   },
   {
-    "id": 16,
-    "student": "Ronin Fenton",
-    "parent": "Sarah Fenton / Kyle Fenton",
-    "phone": "+1 813-997-2448",
-    "email": "sstrott2@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
-    "defaultGrade": "1st Grade"
-  },
-  {
-    "id": 17,
-    "student": "River Ten Brink",
-    "parent": "Meghan Ten Brink / Travis Ten Brink",
-    "phone": "+1 813-469-4041",
-    "email": "megtenbrink@yahoo.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)",
-    "defaultGrade": "7th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 18,
-    "student": "Ezra Ten Brink",
-    "parent": "Meghan Ten Brink / Travis Ten Brink",
-    "phone": "+1 813-469-4041",
-    "email": "megtenbrink@yahoo.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)",
-    "defaultGrade": "5th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 19,
-    "student": "Lily Cooke",
-    "parent": "Amanda Arey",
-    "phone": "+1 863-800-7744",
-    "email": "lmcparents15@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Painting With A Twist",
-    "defaultGrade": "4th Grade"
-  },
-  {
-    "id": 20,
-    "student": "Ronin Fenton",
-    "parent": "Sarah Fenton / Kyle Fenton",
-    "phone": "+1 813-997-2448",
-    "email": "rafparents@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Painting With A Twist",
-    "defaultGrade": "2nd Grade"
-  },
-  {
-    "id": 21,
-    "student": "Aaron Barfield",
-    "parent": "Tiffany Barfield / Aaron Barfield",
-    "phone": "+1 813-469-7155",
-    "email": "thebarfields2012@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)",
-    "defaultGrade": "7th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 22,
-    "student": "Avarielle Campbell",
-    "parent": "Leanne Campbell",
-    "phone": "+1 813-452-0062",
-    "email": "leeleecampbell@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Painting With A Twist",
-    "defaultGrade": "5th Grade"
-  },
-  {
-    "id": 23,
-    "student": "Joseph Campbell",
-    "parent": "Leanne Campbell",
-    "phone": "+1 813-452-0062",
-    "email": "leeleecampbell@gmail.com",
-    "programs": [
-      "Other"
-    ],
-    "payment": "STEP UP",
-    "detail": "Painting With A Twist",
-    "defaultGrade": "5th Grade"
-  },
-  {
-    "id": 24,
-    "student": "Neigha Tooley",
-    "parent": "Christyn Hamel / William",
-    "phone": "+1 863-226-9975",
-    "email": "christyn.hamel@gmail.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "8th Grade"
-  },
-  {
-    "id": 25,
-    "student": "Kylie Collins",
-    "parent": "Heather Collins",
-    "phone": "+1 813-495-8176",
-    "email": "hcollins76@yahoo.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "5th Grade"
-  },
-  {
-    "id": 26,
-    "student": "Prince Smith",
-    "parent": "Brittany Smith",
-    "phone": "+1 469-988-1630",
-    "email": "brinicholesmith@gmail.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "Self-Pay",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "7th Grade"
-  },
-  {
-    "id": 27,
-    "student": "Kylie Collins",
-    "parent": "Heather Collins",
-    "phone": "+1 813-495-8176",
-    "email": "hcollins76@yahoo.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "5th Grade"
-  },
-  {
-    "id": 30,
-    "student": "Dhristian Mitchell",
-    "parent": "Christine Morton Mitchell / Demetrius Mitchell",
-    "phone": "+1 813-609-9688",
-    "email": "daniandsons@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)",
-    "defaultGrade": "6th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 31,
-    "student": "Christian Theriault",
-    "parent": "Vanessa Theriault / Anthony Theriault",
-    "phone": "+1 813-235-7134",
-    "email": "vanessa-theriault@outlook.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "10th Grade"
-  },
-  {
-    "id": 32,
-    "student": "Jude Ten Brink",
-    "parent": "Meghan Ten Brink / Travis Ten Brink",
-    "phone": "+1 813-469-4041",
-    "email": "megtenbrink@yahoo.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)",
-    "defaultGrade": "6th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 33,
-    "student": "Elijah Rodriguez",
-    "parent": "Liannie Rodriguez",
-    "phone": "+1 407-712-5488",
-    "email": "liannierodriguez@yahoo.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)",
-    "defaultGrade": "6th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 34,
-    "student": "Yuliani Rodriguez",
-    "parent": "Kimberly Rodriguez",
-    "phone": "+1 727-953-2864",
-    "email": "kroderz546@gmail.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "10th Grade"
-  },
-  {
-    "id": 35,
-    "student": "Jacania Rodriguez",
-    "parent": "Kimberly Rodriguez",
-    "phone": "+1 727-953-2864",
-    "email": "kroderz546@gmail.com",
-    "programs": [
-      "RYLA"
-    ],
-    "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy",
-    "defaultGrade": "7th Grade"
-  },
-  {
-    "id": 36,
-    "student": "Jionni Acosta",
-    "parent": "Melissa Lugo / Jaime Acosta",
-    "phone": "+1 656-210-3211",
-    "email": "melissalugo617@gmail.com",
-    "programs": [
-      "RYLA",
-      "3x3 Basketball"
-    ],
-    "payment": "Self-Pay",
-    "detail": "Remnant Leadership Academy; 3on3 Live (Basketball Training)",
-    "defaultGrade": "6th Grade",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 37,
     "student": "Andres Williams",
     "parent": "Amy Williams",
     "phone": "+1 813-833-8143",
@@ -1036,98 +619,176 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "Manually added — 3x3 Basketball",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Manually added",
     "defaultInvoiceSent": "Yes",
     "defaultPaid": "No",
     "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
+    "default3x3OneOnOne": "No",
+    "id": 3
   },
   {
-    "id": 38,
-    "student": "Liam Rogers",
-    "parent": "Angey Rogers",
-    "phone": "",
-    "email": "awylf77@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "Manually added — 3x3 Basketball",
-    "defaultInvoiceSent": "Yes",
-    "defaultPaid": "Yes",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 39,
-    "student": "Marcellus Ramirez",
-    "parent": "Katherine Ramirez",
-    "phone": "+1 347-456-8219",
-    "email": "celestialfitteam@gmail.com",
-    "programs": [
-      "3x3 Basketball"
-    ],
-    "payment": "STEP UP",
-    "detail": "Manually added — 3x3 Basketball",
-    "defaultInvoiceSent": "Yes",
-    "defaultPaid": "Yes",
-    "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
-  },
-  {
-    "id": 40,
-    "student": "Braxtyn Clark",
-    "parent": "Katina Clark",
-    "phone": "",
-    "email": "katinayclark@gmail.com",
+    "student": "Avarielle Campbell",
+    "parent": "Leanne Campbell",
+    "phone": "+1 813-452-0062",
+    "email": "leeleecampbell@gmail.com",
     "programs": [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+    "detail": "From enrollment form: Painting With A Twist",
+    "defaultGrade": "5th Grade",
+    "id": 4
   },
   {
-    "id": 41,
+    "student": "Ayden Ortiz",
+    "parent": "Yalitza Soto",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "2nd Grade",
+    "id": 5
+  },
+  {
     "student": "Braden Clark",
     "parent": "Katina Clark",
     "phone": "",
     "email": "katinayclark@gmail.com",
     "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Newly enrolled",
+    "id": 6
+  },
+  {
+    "student": "Braxtyn Clark",
+    "parent": "Katina Clark",
+    "phone": "",
+    "email": "katinayclark@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Newly enrolled",
+    "id": 7
+  },
+  {
+    "student": "Brayden Ortiz",
+    "parent": "Yalitza Soto",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+    "detail": "From enrollment form: Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "2nd Grade",
+    "id": 8
   },
   {
-    "id": 42,
-    "student": "Francisco Cubilla",
-    "parent": "Gabriela Cruz",
-    "phone": "",
-    "email": "gabrielacruz317@gmail.com",
+    "student": "Brayson Amerman",
+    "parent": "Michelle Amerman",
+    "phone": "+1 813-309-2520",
+    "email": "deberma@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Painting With A Twist - (May 1)",
+    "defaultGrade": "2nd Grade",
+    "id": 9
+  },
+  {
+    "student": "Cashton Ricci",
+    "parent": "Nicole Ferraro",
+    "phone": "+1 262-806-2408",
+    "email": "nikkiricci29@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "Self-Pay",
+    "detail": "From enrollment form: 3x3 Basketball Training - (Thursdays)",
+    "defaultGrade": "3rd Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 10
+  },
+  {
+    "student": "Christian Theriault",
+    "parent": "Vanessa Theriault",
+    "phone": "+1 813-235-7134",
+    "email": "vanessa-theriault@outlook.com",
     "programs": [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Corrected from Wix enrollment form (Aug 2026): actual last name Cubilla, enrolled in RYLA (Remnant Leadership Academy), not Other. Please confirm.",
-    "defaultGrade": "9th Grade",
-    "defaultShirt": "Large"
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "10th Grade",
+    "id": 11
   },
   {
-    "id": 43,
-    "student": "Gabriel Cubilla",
-    "parent": "Gabriela Cruz",
-    "phone": "",
-    "email": "gabrielacruz317@gmail.com",
+    "student": "Christopher Guzman",
+    "parent": "Carly Justo",
+    "phone": "+1 813-409-4789",
+    "email": "jcarly918@gmail.com",
     "programs": [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Corrected from Wix enrollment form (Aug 2026): actual last name Cubilla, enrolled in RYLA (Remnant Leadership Academy), not Other. Please confirm.",
-    "defaultGrade": "8th Grade",
-    "defaultShirt": "Medium"
+    "detail": "From enrollment form: Remnant Leadership Academy (Grades 6-12) - Fridays  **Starting August 7** = $240/ month",
+    "defaultGrade": "7th Grade",
+    "defaultShirt": "Medium",
+    "id": 12
   },
   {
-    "id": 44,
+    "student": "Dhristian Mitchell",
+    "parent": "Christine Morton Mitchell",
+    "phone": "+1 813-609-9688",
+    "email": "daniandsons@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 13
+  },
+  {
+    "student": "EJ Roberts",
+    "parent": "KEvin Roberts",
+    "phone": "+1 904-616-9964",
+    "email": "kevroberts43@gmail.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Kids (Grades  K-5) **Starting August 5** = $240/ month",
+    "defaultGrade": "3rd Grade",
+    "defaultShirt": "Youth Small",
+    "id": 14
+  },
+  {
+    "student": "Elijah Rodriguez",
+    "parent": "Joel Rodriguez / Liannie Rodriguez",
+    "phone": "+1 407-712-5488",
+    "email": "liannierodriguez@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3on3 Live (Basketball Training); Summer 3x3 Development Clinic (Grades 3-5) - June 22 - 25",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 15
+  },
+  {
     "student": "Emi Cruz",
     "parent": "Gabriela Cruz",
     "phone": "",
@@ -1136,10 +797,83 @@ const ROSTER = [
       "Tutoring"
     ],
     "payment": "STEP UP",
-    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Tutoring only on Wix invoices",
+    "id": 16
   },
   {
-    "id": 45,
+    "student": "Evan Martin",
+    "parent": "Leanne Martin",
+    "phone": "+1 603-327-4267",
+    "email": "leannemartin476@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "Self-Pay",
+    "detail": "From enrollment form: Remnant Leadership Academy (Grades 6-12) - Fridays  **Starting August 7** = $240/ month",
+    "defaultGrade": "9th Grade",
+    "defaultShirt": "Medium",
+    "id": 17
+  },
+  {
+    "student": "Ezra Ten Brink",
+    "parent": "Meghan Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3on3 Live (3x3 Basketball Training)",
+    "defaultGrade": "5th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 18
+  },
+  {
+    "student": "Francisco Cubilla",
+    "parent": "Gabriela Cruz",
+    "phone": "+1 415-656-6926",
+    "email": "gabrielacruz317@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy (Grades 6-12) - Fridays  **Starting August 7** = $240/ month",
+    "defaultGrade": "9th Grade",
+    "defaultShirt": "Large",
+    "id": 19
+  },
+  {
+    "student": "Gabriel Cubilla",
+    "parent": "Gabriela Cruz",
+    "phone": "+1 415-656-6926",
+    "email": "gabrielacruz317@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy (Grades 6-12) - Fridays  **Starting August 7** = $240/ month",
+    "defaultGrade": "8th Grade",
+    "defaultShirt": "Medium",
+    "id": 20
+  },
+  {
+    "student": "Greyson Stream",
+    "parent": "Julie Smallwood",
+    "phone": "+1 815-979-3273",
+    "email": "juliesmallwood3@gmail.com",
+    "programs": [
+      "3x3 Basketball",
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "4th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 21
+  },
+  {
     "student": "Isaac Zechmann",
     "parent": "Danielle Zechmann",
     "phone": "",
@@ -1148,67 +882,331 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Parent name inferred from email, please confirm.",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Newly enrolled",
     "default3x3PlayLab": "Yes",
-    "default3x3OneOnOne": "No"
+    "default3x3OneOnOne": "No",
+    "id": 22
   },
   {
-    "id": 46,
+    "student": "Jacania Rodriguez",
+    "parent": "Kimberly Rodriguez",
+    "phone": "+1 727-953-2864",
+    "email": "kroderz546@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "7th Grade",
+    "id": 23
+  },
+  {
+    "student": "Jayden Ortiz",
+    "parent": "Yalitza Soto",
+    "phone": "+1 407-267-8294",
+    "email": "yalitzaortiz2003@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3x3 Basketball Training - (Thursdays)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "Yes",
+    "id": 24
+  },
+  {
+    "student": "Jionni Acosta",
+    "parent": "Melissa Lugo",
+    "phone": "+1 656-210-3211",
+    "email": "melissalugo617@gmail.com",
+    "programs": [
+      "3x3 Basketball",
+      "RYLA"
+    ],
+    "payment": "Self-Pay",
+    "detail": "From enrollment form: 3on3 Live (Basketball Training); Remnant Leadership Academy",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 25
+  },
+  {
+    "student": "Joseph Campbell",
+    "parent": "Leanne Campbell",
+    "phone": "+1 813-452-0062",
+    "email": "leeleecampbell@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Painting With A Twist",
+    "defaultGrade": "5th Grade",
+    "id": 26
+  },
+  {
+    "student": "Jude Ten Brink",
+    "parent": "Meghan Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 27
+  },
+  {
+    "student": "Julianna Guzman",
+    "parent": "Carly Justo",
+    "phone": "+1 813-409-4789",
+    "email": "jcarly918@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy (Grades 6-12) - Fridays  **Starting August 7** = $240/ month",
+    "defaultGrade": "6th Grade",
+    "defaultShirt": "Medium",
+    "id": 28
+  },
+  {
+    "student": "Kylie Collins",
+    "parent": "Heather Collins",
+    "phone": "+1 813-495-8176",
+    "email": "hcollins76@yahoo.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "5th Grade",
+    "id": 29
+  },
+  {
+    "student": "Liam Rogers",
+    "parent": "Angey Rogers",
+    "phone": "",
+    "email": "awylf77@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Manually added",
+    "defaultInvoiceSent": "Yes",
+    "defaultPaid": "Yes",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 30
+  },
+  {
+    "student": "Lily Cooke",
+    "parent": "Amanda Arey",
+    "phone": "+1 863-800-7744",
+    "email": "lmcparents15@gmail.com",
+    "programs": [
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Painting With A Twist",
+    "defaultGrade": "4th Grade",
+    "id": 31
+  },
+  {
+    "student": "Marcellus Ramirez",
+    "parent": "Katherine Ramirez",
+    "phone": "+1 347-456-8219",
+    "email": "celestialfitteam@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Manually added",
+    "defaultInvoiceSent": "Yes",
+    "defaultPaid": "Yes",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 32
+  },
+  {
+    "student": "Milo Callihan",
+    "parent": "Courtney Bush",
+    "phone": "+1 863-860-1102",
+    "email": "cplummer0528@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 33
+  },
+  {
+    "student": "Neigha Tooley",
+    "parent": "Christyn Hamel",
+    "phone": "+1 863-226-9975",
+    "email": "christyn.hamel@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "8th Grade",
+    "id": 34
+  },
+  {
+    "student": "Noah Stream",
+    "parent": "Julie Smallwood",
+    "phone": "+1 815-979-3273",
+    "email": "juliesmallwood3@gmail.com",
+    "programs": [
+      "3x3 Basketball",
+      "Other"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "1st Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 35
+  },
+  {
+    "student": "Prince Smith",
+    "parent": "Brittany Smith",
+    "phone": "+1 469-988-1630",
+    "email": "brinicholesmith@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "Self-Pay",
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "7th Grade",
+    "id": 36
+  },
+  {
+    "student": "Rebekah Conley",
+    "parent": "Wendy Conley",
+    "phone": "+1 813-244-7862",
+    "email": "wendyconley1@gmail.com",
+    "programs": [
+      "RYLA"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: RYLA Summer Academy (Grades 6-12) - June 8 -  June 12; Remnant Leadership Academy (Grades 6-12) - Fridays",
+    "defaultGrade": "8th Grade",
+    "id": 37
+  },
+  {
+    "student": "River Ten Brink",
+    "parent": "Meghan Ten Brink",
+    "phone": "+1 813-469-4041",
+    "email": "megtenbrink@yahoo.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3on3 Live (3x3 Basketball Training)",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 38
+  },
+  {
+    "student": "Ronin Fenton",
+    "parent": "Sarah Fenton",
+    "phone": "+1 813-997-2448",
+    "email": "rafparents@gmail.com",
+    "programs": [
+      "Other",
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Painting With A Twist; Remnant Kids (Grades  K-5) **Starting August** = $240/ month; Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "2nd Grade",
+    "id": 39
+  },
+  {
+    "student": "Selena Khedekar",
+    "parent": "Sophia Khedekar",
+    "phone": "+1 978-407-3028",
+    "email": "sophia.anita8@gmail.com",
+    "programs": [
+      "Other",
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: Remnant Kids (Grades  K-5) **Starting August** = $240/ month; Remnant Virtual Classroom (Grades K-12)",
+    "defaultGrade": "Kindergarden",
+    "id": 40
+  },
+  {
     "student": "Sophia Rodriguez",
     "parent": "Nicole Rodriguez",
     "phone": "",
     "email": "rodriguezfamily016@gmail.com",
     "programs": [
-      "Tutoring"
+      "Remnant Kids"
     ],
     "payment": "STEP UP",
-    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
+    "detail": "No enrollment form on file yet — added from Wix invoice history. Tutoring only on Wix invoices",
+    "id": 41
   },
   {
-    "id": 47,
-    "student": "Amelia Rodriguez",
-    "parent": "Nicole Rodriguez",
-    "phone": "",
-    "email": "rodriguezfamily016@gmail.com",
+    "student": "Yuliani Rodriguez",
+    "parent": "Kimberly Rodriguez",
+    "phone": "+1 727-953-2864",
+    "email": "kroderz546@gmail.com",
     "programs": [
-      "Tutoring"
+      "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
+    "detail": "From enrollment form: Remnant Leadership Academy",
+    "defaultGrade": "10th Grade",
+    "id": 42
+  },
+  {
+    "student": "Zakariah Riggan",
+    "parent": "Darrell Lake",
+    "phone": "+1 813-610-3508",
+    "email": "darrell.lake88@gmail.com",
+    "programs": [
+      "3x3 Basketball"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form: 3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm = $240/ month",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No",
+    "id": 43
   }
 ];
 
-const FINANCE = {
-  "2": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "3": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "9": {"billed":553.33,"paid":553.33,"owed":0.00},
-  "10": {"billed":1373.33,"paid":1373.33,"owed":0.00},
-  "11": {"billed":553.33,"paid":553.33,"owed":0.00},
-  "17": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "18": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "20": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "21": {"billed":120.00,"paid":120.00,"owed":0.00},
-  "24": {"billed":1310.00,"paid":655.00,"owed":655.00},
-  "31": {"billed":710.00,"paid":710.00,"owed":0.00},
-  "32": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "33": {"billed":720.00,"paid":720.00,"owed":0.00},
-  "37": {"billed":480.00,"paid":480.00,"owed":0.00},
-  "38": {"billed":240.00,"paid":240.00,"owed":0.00},
-  "39": {"billed":600.00,"paid":600.00,"owed":0.00},
-  "40": {"billed":415.00,"paid":207.50,"owed":207.50},
-  "41": {"billed":415.00,"paid":207.50,"owed":207.50},
-  "42": {"billed":715.00,"paid":715.00,"owed":0.00},
-  "43": {"billed":715.00,"paid":715.00,"owed":0.00},
-  "44": {"billed":180.00,"paid":180.00,"owed":0.00},
-  "45": {"billed":315.00,"paid":240.00,"owed":75.00},
-  "46": {"billed":1500.00,"paid":960.00,"owed":540.00},
-  "47": {"billed":1500.00,"paid":960.00,"owed":540.00}
-};
-// FINANCE is a snapshot pulled from Wix Receipts. Students not listed here
-// have no invoice history in Wix yet (owed shows as $0.00 / "No invoices yet").
+// Per-transaction (per-receipt) billed/paid amounts attributed to each student, pulled from
+// Wix Receipts. This lets both the roster balance badge (all-time) and the Finance dashboard's
+// month/year selector compute totals for whatever period is selected, instead of one fixed snapshot.
+const STUDENT_TRANSACTIONS = {"0":[{"date":"2026-05-06","billed":120,"paid":120}],"2":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}],"3":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120},{"date":"2026-04-26","billed":120,"paid":120}],"5":[{"date":"2026-07-29","billed":400,"paid":400},{"date":"2026-07-24","billed":746.67,"paid":746.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"6":[{"date":"2026-08-03","billed":415,"paid":207.5}],"7":[{"date":"2026-08-03","billed":415,"paid":207.5}],"8":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"11":[{"date":"2026-05-21","billed":240,"paid":240},{"date":"2026-03-23","billed":230,"paid":230},{"date":"2026-07-24","billed":240,"paid":240}],"15":[{"date":"2026-04-26","billed":120,"paid":120},{"date":"2026-08-03","billed":240,"paid":240},{"date":"2026-05-14","billed":120,"paid":120},{"date":"2026-07-24","billed":240,"paid":240}],"16":[{"date":"2026-08-03","billed":180,"paid":180}],"18":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"19":[{"date":"2026-08-03","billed":715,"paid":715}],"20":[{"date":"2026-08-03","billed":715,"paid":715}],"22":[{"date":"2026-08-03","billed":315,"paid":240}],"24":[{"date":"2026-07-24","billed":326.67,"paid":326.67},{"date":"2026-07-24","billed":226.67,"paid":226.67}],"27":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"30":[{"date":"2026-07-24","billed":240,"paid":240}],"32":[{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-07-24","billed":240,"paid":240},{"date":"2026-05-06","billed":120,"paid":120}],"34":[{"date":"2026-03-26","billed":655,"paid":495},{"date":"2026-05-21","billed":655,"paid":160}],"38":[{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-03-04","billed":80,"paid":80},{"date":"2026-05-18","billed":40,"paid":40},{"date":"2026-04-26","billed":40,"paid":40}],"39":[{"date":"2026-05-21","billed":480,"paid":480}],"40":[{"date":"2026-07-24","billed":240,"paid":240}],"41":[{"date":"2026-08-03","billed":600,"paid":395},{"date":"2026-07-31","billed":540,"paid":205},{"date":"2026-07-24","billed":360,"paid":360}]};
+
 const FINANCE_LAST_UPDATED = "2026-08-04T16:44:37Z";
+
+function round2(n){ return Math.round(n * 100) / 100; }
+
+// monthKey: "YYYY-MM" to scope to one month, or null/"ALL" for all-time.
+function computeFinance(id, monthKey){
+  const txns = STUDENT_TRANSACTIONS[String(id)] || [];
+  if(txns.length === 0) return {billed:0, paid:0, owed:0, none:true};
+  const filtered = (monthKey == null || monthKey === "ALL") ? txns : txns.filter(t => t.date.slice(0,7) === monthKey);
+  const billed = round2(filtered.reduce((s,t)=>s+t.billed,0));
+  const paid = round2(filtered.reduce((s,t)=>s+t.paid,0));
+  return {billed, paid, owed: round2(billed-paid), none:false};
+}
+// Roster tab always shows the all-time outstanding balance, regardless of the Finance tab's month selector.
 function getFinance(id){
-  return FINANCE[String(id)] || {billed:0, paid:0, owed:0, none:true};
+  return computeFinance(id, null);
 }
 function formatLastUpdated(iso){
   const d = new Date(iso);
@@ -1557,14 +1555,41 @@ function monthLabel(key){
 }
 
 let flippedProgram = null; // only one program card flipped open at a time
-let openMonths = null; // lazily initialized to the most recent month
+let openMonths = null; // lazily initialized to the most recent month (All Time view only)
+let financeMonth = null; // "YYYY-MM" or "ALL" — the period selected on the Finance tab
+
+function getFinanceMonthKeys(){
+  const keys = new Set();
+  Object.values(STUDENT_TRANSACTIONS).forEach(txns=>{
+    txns.forEach(t=>keys.add(t.date.slice(0,7)));
+  });
+  keys.add(new Date().toISOString().slice(0,7)); // always include the real current month, even before any activity posts
+  return Array.from(keys).sort().reverse();
+}
+
+function populateFinanceMonthSelect(){
+  const sel = document.getElementById("financeMonthSelect");
+  const keys = getFinanceMonthKeys();
+  if(financeMonth === null){
+    financeMonth = new Date().toISOString().slice(0,7); // default to the current month
+  }
+  sel.innerHTML = keys.map(k=>`<option value="${k}"${k===financeMonth?' selected':''}>${monthLabel(k)}</option>`).join("")
+    + `<option value="ALL"${financeMonth==="ALL"?' selected':''}>All Time</option>`;
+}
+document.getElementById("financeMonthSelect").addEventListener("change", (e)=>{
+  financeMonth = e.target.value;
+  flippedProgram = null; // underlying numbers just changed — close any open card so it doesn't show stale data
+  renderFinance();
+});
 
 function renderFinance(){
-  const withFin = ROSTER.filter(item => !getFinance(item.id).none);
+  populateFinanceMonthSelect();
+  const isAllTime = financeMonth === "ALL";
+  const withFin = ROSTER.filter(item => !computeFinance(item.id, financeMonth).none);
 
   let totalBilled = 0, totalPaid = 0, totalOwed = 0;
   withFin.forEach(item=>{
-    const f = getFinance(item.id);
+    const f = computeFinance(item.id, financeMonth);
     totalBilled += f.billed; totalPaid += f.paid; totalOwed += f.owed;
   });
 
@@ -1580,7 +1605,7 @@ function renderFinance(){
     let billed=0, paid=0, owed=0;
     const famMap = {};
     items.forEach(i=>{
-      const f = getFinance(i.id);
+      const f = computeFinance(i.id, financeMonth);
       billed += f.billed; paid += f.paid; owed += f.owed;
       if(f.owed > 0){
         if(!famMap[i.parent]) famMap[i.parent] = {billed:0, owed:0};
@@ -1643,7 +1668,7 @@ function renderFinance(){
   // Families ranked by amount owed
   const famMap = {};
   withFin.forEach(item=>{
-    const f = getFinance(item.id);
+    const f = computeFinance(item.id, financeMonth);
     if(f.owed <= 0) return;
     if(!famMap[item.parent]) famMap[item.parent] = {owed:0, students:[]};
     famMap[item.parent].owed += f.owed;
@@ -1658,39 +1683,46 @@ function renderFinance(){
     </div>
   `).join("") : `<div class="fin-empty">Nobody owes a balance right now 🎉</div>`;
 
-  // Recent activity — grouped by month, most recent expanded
-  const byMonth = {};
-  RECENT_ACTIVITY.forEach(a=>{
-    const k = monthKey(a.date);
-    if(!byMonth[k]) byMonth[k] = [];
-    byMonth[k].push(a);
-  });
-  const monthKeys = Object.keys(byMonth).sort().reverse();
-  if(openMonths === null){
-    openMonths = new Set(monthKeys.length ? [monthKeys[0]] : []);
-  }
-  document.getElementById("finActivity").innerHTML = monthKeys.map(k=>{
-    const entries = byMonth[k];
-    const total = entries.reduce((s,a)=>s+a.amount,0);
-    const rows = entries.map(a=>`
-      <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
-    `).join("");
-    return `
-      <div class="activity-month${openMonths.has(k) ? ' open' : ''}" data-month="${k}">
-        <div class="activity-month-header"><span>${monthLabel(k)} <span class="am-total">· ${money(total)}</span></span><span class="am-chev">▾</span></div>
-        <div class="activity-entries">${rows}</div>
-      </div>
-    `;
-  }).join("");
-  document.querySelectorAll(".activity-month-header").forEach(header=>{
-    header.addEventListener("click", ()=>{
-      const section = header.closest(".activity-month");
-      const k = section.getAttribute("data-month");
-      section.classList.toggle("open");
-      if(section.classList.contains("open")) openMonths.add(k);
-      else openMonths.delete(k);
+  // Recent activity — flat list for a specific month; grouped-by-month/collapsible when "All Time" is selected
+  if(isAllTime){
+    const byMonth = {};
+    RECENT_ACTIVITY.forEach(a=>{
+      const k = monthKey(a.date);
+      if(!byMonth[k]) byMonth[k] = [];
+      byMonth[k].push(a);
     });
-  });
+    const monthKeys = Object.keys(byMonth).sort().reverse();
+    if(openMonths === null){
+      openMonths = new Set(monthKeys.length ? [monthKeys[0]] : []);
+    }
+    document.getElementById("finActivity").innerHTML = monthKeys.map(k=>{
+      const entries = byMonth[k];
+      const total = entries.reduce((s,a)=>s+a.amount,0);
+      const rows = entries.map(a=>`
+        <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
+      `).join("");
+      return `
+        <div class="activity-month${openMonths.has(k) ? ' open' : ''}" data-month="${k}">
+          <div class="activity-month-header"><span>${monthLabel(k)} <span class="am-total">· ${money(total)}</span></span><span class="am-chev">▾</span></div>
+          <div class="activity-entries">${rows}</div>
+        </div>
+      `;
+    }).join("");
+    document.querySelectorAll(".activity-month-header").forEach(header=>{
+      header.addEventListener("click", ()=>{
+        const section = header.closest(".activity-month");
+        const k = section.getAttribute("data-month");
+        section.classList.toggle("open");
+        if(section.classList.contains("open")) openMonths.add(k);
+        else openMonths.delete(k);
+      });
+    });
+  } else {
+    const entries = RECENT_ACTIVITY.filter(a => monthKey(a.date) === financeMonth).sort((a,b)=> a.date < b.date ? 1 : -1);
+    document.getElementById("finActivity").innerHTML = entries.length ? entries.map(a=>`
+      <div class="fin-prog-row"><span class="fp-name">${a.name}</span><span class="fp-nums">${a.date} · ${money(a.amount)} paid</span></div>
+    `).join("") : `<div class="fin-empty">No payment activity in ${monthLabel(financeMonth)}.</div>`;
+  }
 }
 
 document.getElementById("btnRosterView").addEventListener("click", ()=>{
