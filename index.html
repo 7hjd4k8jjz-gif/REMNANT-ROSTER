@@ -178,6 +178,8 @@
     height:340px;
     perspective:1400px;
   }
+  .card.card-tall{height:410px;}
+  .card.card-taller{height:452px;}
   .stu-flip-inner{
     position:relative;
     width:100%;
@@ -279,6 +281,31 @@
   .badge-3x3-Basketball{background:var(--gray-badge);color:#ffffff;}
   .badge-Other{background:#ffffff;color:#666;border:1px solid #ddd;}
   .badge-Tutoring{background:var(--orange-bg);color:var(--orange);}
+
+  .info-row{padding:0 14px 10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .info-label{font-size:11px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:0.03em;flex:0 0 auto;}
+  .info-select, .info-input{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px 9px;
+    font-size:13.5px;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f7f8fa;
+    color:var(--text);
+    text-align:right;
+    max-width:58%;
+  }
+  .subprog-toggles{display:flex;gap:6px;}
+  .subprog-chip{
+    border:1.5px solid var(--border);
+    background:#f7f8fa;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:bold;
+    padding:5px 10px;
+    border-radius:14px;
+  }
+  .subprog-chip.active{background:var(--green-bg);border-color:var(--green);color:var(--green);}
 
   .contact-row{
     display:flex;
@@ -513,7 +540,9 @@ const ROSTER = [
       "Remnant Kids"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August 5** = $240/ month"
+    "detail": "Remnant Kids (Grades K-5) **Starting August 5** = $240/ month",
+    "defaultGrade": "3rd Grade",
+    "defaultShirt": "Youth Small"
   },
   {
     "id": 2,
@@ -525,7 +554,8 @@ const ROSTER = [
       "Remnant Kids"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month"
+    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 3,
@@ -537,7 +567,8 @@ const ROSTER = [
       "Remnant Kids"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month; Remnant Virtual Classroom (Grades K-12)"
+    "detail": "Remnant Kids (Grades K-5) **Starting August** = $240/ month; Remnant Virtual Classroom (Grades K-12)",
+    "defaultGrade": "Kindergarden"
   },
   {
     "id": 4,
@@ -549,7 +580,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm = $240/ month"
+    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm = $240/ month",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 5,
@@ -561,7 +595,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm"
+    "detail": "3x3 Basketball Play Lab (Grades 4-8) - Thursdays 10:00am - 2:00pm",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 6,
@@ -573,7 +610,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy (Grades 6-12) - Fridays; RYLA Summer Academy (Grades 6-12) - June 8 - June 12"
+    "detail": "Remnant Leadership Academy (Grades 6-12) - Fridays; RYLA Summer Academy (Grades 6-12) - June 8 - June 12",
+    "defaultGrade": "8th Grade"
   },
   {
     "id": 7,
@@ -585,7 +623,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "Summer 3x3 Development Clinic (Grades 3-5) - June 22 - 25"
+    "detail": "Summer 3x3 Development Clinic (Grades 3-5) - June 22 - 25",
+    "defaultGrade": "3rd Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 8,
@@ -597,7 +638,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "Self-Pay",
-    "detail": "3x3 Basketball Training - (Thursdays)"
+    "detail": "3x3 Basketball Training - (Thursdays)",
+    "defaultGrade": "3rd Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 9,
@@ -609,7 +653,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 10,
@@ -621,7 +666,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 11,
@@ -633,7 +679,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays)"
+    "detail": "3x3 Basketball Training - (Thursdays)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "Yes"
   },
   {
     "id": 12,
@@ -645,7 +694,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "1st Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 13,
@@ -657,7 +709,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+    "detail": "3x3 Basketball Training - (Thursdays); Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "4th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 14,
@@ -669,7 +724,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist - (May 1)"
+    "detail": "Painting With A Twist - (May 1)",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 15,
@@ -681,7 +737,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist - (May 1)"
+    "detail": "Painting With A Twist - (May 1)",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 16,
@@ -693,7 +750,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)"
+    "detail": "Spring STEM + Literacy - *5 weeks - (Starts April 30)",
+    "defaultGrade": "1st Grade"
   },
   {
     "id": 17,
@@ -705,7 +763,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)"
+    "detail": "3on3 Live (3x3 Basketball Training)",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 18,
@@ -717,7 +778,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)"
+    "detail": "3on3 Live (3x3 Basketball Training)",
+    "defaultGrade": "5th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 19,
@@ -729,7 +793,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist"
+    "detail": "Painting With A Twist",
+    "defaultGrade": "4th Grade"
   },
   {
     "id": 20,
@@ -741,7 +806,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist"
+    "detail": "Painting With A Twist",
+    "defaultGrade": "2nd Grade"
   },
   {
     "id": 21,
@@ -753,7 +819,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (3x3 Basketball Training)"
+    "detail": "3on3 Live (3x3 Basketball Training)",
+    "defaultGrade": "7th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 22,
@@ -765,7 +834,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist"
+    "detail": "Painting With A Twist",
+    "defaultGrade": "5th Grade"
   },
   {
     "id": 23,
@@ -777,7 +847,8 @@ const ROSTER = [
       "Other"
     ],
     "payment": "STEP UP",
-    "detail": "Painting With A Twist"
+    "detail": "Painting With A Twist",
+    "defaultGrade": "5th Grade"
   },
   {
     "id": 24,
@@ -789,7 +860,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "8th Grade"
   },
   {
     "id": 25,
@@ -801,7 +873,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "5th Grade"
   },
   {
     "id": 26,
@@ -813,7 +886,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "Self-Pay",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "7th Grade"
   },
   {
     "id": 27,
@@ -825,7 +899,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "5th Grade"
   },
   {
     "id": 30,
@@ -837,7 +912,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)"
+    "detail": "3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 31,
@@ -849,7 +927,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "10th Grade"
   },
   {
     "id": 32,
@@ -861,7 +940,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)"
+    "detail": "3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 33,
@@ -873,7 +955,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "3on3 Live (Basketball Training)"
+    "detail": "3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 34,
@@ -885,7 +970,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "10th Grade"
   },
   {
     "id": 35,
@@ -897,7 +983,8 @@ const ROSTER = [
       "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Remnant Leadership Academy"
+    "detail": "Remnant Leadership Academy",
+    "defaultGrade": "7th Grade"
   },
   {
     "id": 36,
@@ -910,7 +997,10 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "Self-Pay",
-    "detail": "Remnant Leadership Academy; 3on3 Live (Basketball Training)"
+    "detail": "Remnant Leadership Academy; 3on3 Live (Basketball Training)",
+    "defaultGrade": "6th Grade",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 37,
@@ -924,7 +1014,9 @@ const ROSTER = [
     "payment": "STEP UP",
     "detail": "Manually added — 3x3 Basketball",
     "defaultInvoiceSent": "Yes",
-    "defaultPaid": "No"
+    "defaultPaid": "No",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 38,
@@ -938,7 +1030,9 @@ const ROSTER = [
     "payment": "STEP UP",
     "detail": "Manually added — 3x3 Basketball",
     "defaultInvoiceSent": "Yes",
-    "defaultPaid": "Yes"
+    "defaultPaid": "Yes",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 39,
@@ -952,7 +1046,9 @@ const ROSTER = [
     "payment": "STEP UP",
     "detail": "Manually added — 3x3 Basketball",
     "defaultInvoiceSent": "Yes",
-    "defaultPaid": "Yes"
+    "defaultPaid": "Yes",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 40,
@@ -980,27 +1076,31 @@ const ROSTER = [
   },
   {
     "id": 42,
-    "student": "Francisco Cruz",
+    "student": "Francisco Cubilla",
     "parent": "Gabriela Cruz",
     "phone": "",
     "email": "gabrielacruz317@gmail.com",
     "programs": [
-      "Other"
+      "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+    "detail": "Corrected from Wix enrollment form (Aug 2026): actual last name Cubilla, enrolled in RYLA (Remnant Leadership Academy), not Other. Please confirm.",
+    "defaultGrade": "9th Grade",
+    "defaultShirt": "Large"
   },
   {
     "id": 43,
-    "student": "Gabriel Cruz",
+    "student": "Gabriel Cubilla",
     "parent": "Gabriela Cruz",
     "phone": "",
     "email": "gabrielacruz317@gmail.com",
     "programs": [
-      "Other"
+      "RYLA"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Confirm program (RYLA or Remnant Kids) and phone."
+    "detail": "Corrected from Wix enrollment form (Aug 2026): actual last name Cubilla, enrolled in RYLA (Remnant Leadership Academy), not Other. Please confirm.",
+    "defaultGrade": "8th Grade",
+    "defaultShirt": "Medium"
   },
   {
     "id": 44,
@@ -1024,7 +1124,9 @@ const ROSTER = [
       "3x3 Basketball"
     ],
     "payment": "STEP UP",
-    "detail": "Newly enrolled — pulled from Wix invoice. Parent name inferred from email, please confirm."
+    "detail": "Newly enrolled — pulled from Wix invoice. Parent name inferred from email, please confirm.",
+    "default3x3PlayLab": "Yes",
+    "default3x3OneOnOne": "No"
   },
   {
     "id": 46,
@@ -1107,12 +1209,20 @@ function programBadgeClass(p){ return "badge-" + p.replace(/[^a-zA-Z0-9]+/g,'-')
 function findRosterItem(id){
   return ROSTER.find(r => String(r.id) === String(id)) || {};
 }
+const ACADEMIC_PROGRAMS = ["RYLA","Remnant Kids","3x3 Basketball"];
+const GRADE_OPTIONS = ["Kindergarden","1st Grade","2nd Grade","3rd Grade","4th Grade","5th Grade","6th Grade","7th Grade","8th Grade","9th Grade","10th Grade","11th Grade","12th Grade"];
+
 function getRow(idOrItem){
   const id = (idOrItem && typeof idOrItem === "object") ? idOrItem.id : idOrItem;
+  const rosterItem = findRosterItem(id);
   const e = edits[id] || {};
   return {
     notes: e.notes !== undefined ? e.notes : "",
-    active: e.active || "Yes"
+    active: e.active || "Yes",
+    gradeLevel: e.gradeLevel !== undefined ? e.gradeLevel : (rosterItem.defaultGrade || ""),
+    shirtSize: e.shirtSize !== undefined ? e.shirtSize : (rosterItem.defaultShirt || ""),
+    playLab: e.playLab || rosterItem.default3x3PlayLab || "Yes",
+    oneOnOne: e.oneOnOne || rosterItem.default3x3OneOnOne || "No"
   };
 }
 function updateEdit(id, field, value){
@@ -1179,9 +1289,36 @@ function render(){
     const fin = getFinance(item.id);
     const owedCls = fin.owed > 0 ? "owed-due" : "owed-zero";
     const owedText = money(fin.owed);
+    const showAcademic = item.programs.some(p => ACADEMIC_PROGRAMS.includes(p));
+    const is3x3 = item.programs.includes("3x3 Basketball");
 
+    const academicRows = showAcademic ? `
+      <div class="info-row">
+        <span class="info-label">Grade Level</span>
+        <select class="info-select" data-id="${item.id}" data-field="gradeLevel">
+          <option value="" ${!row.gradeLevel ? "selected" : ""}>—</option>
+          ${GRADE_OPTIONS.map(g=>`<option value="${g}" ${row.gradeLevel===g ? "selected" : ""}>${g}</option>`).join("")}
+        </select>
+      </div>
+      <div class="info-row">
+        <span class="info-label">T-Shirt Size</span>
+        <input type="text" class="info-input" data-id="${item.id}" data-field="shirtSize" placeholder="e.g. Youth Medium" value="${row.shirtSize}">
+      </div>
+    ` : "";
+
+    const subProgramRow = is3x3 ? `
+      <div class="info-row">
+        <span class="info-label">3x3 Sub-Program</span>
+        <div class="subprog-toggles">
+          <button type="button" class="subprog-chip ${row.playLab==='Yes' ? 'active' : ''}" data-id="${item.id}" data-sub="playLab">Play Lab</button>
+          <button type="button" class="subprog-chip ${row.oneOnOne==='Yes' ? 'active' : ''}" data-id="${item.id}" data-sub="oneOnOne">1-on-1</button>
+        </div>
+      </div>
+    ` : "";
+
+    const sizeCls = is3x3 ? " card-taller" : (showAcademic ? " card-tall" : "");
     const card = document.createElement("div");
-    card.className = "card" + (isFlipped ? " flipped" : "") + (row.active === "No" ? " inactive" : "");
+    card.className = "card" + sizeCls + (isFlipped ? " flipped" : "") + (row.active === "No" ? " inactive" : "");
     card.innerHTML = `
       <div class="stu-flip-inner">
         <div class="stu-face stu-front">
@@ -1200,6 +1337,8 @@ function render(){
           </div>
           <div class="badges">${badges}</div>
           <div class="owed-row"><span class="owed-label">Balance</span><span class="owed-amt ${owedCls}">${owedText}</span></div>
+          ${academicRows}
+          ${subProgramRow}
           <div class="contact-row">
             <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
             <a class="contact-btn" href="${smsHref}"><span class="ic">💬</span> Text</a>
@@ -1258,6 +1397,26 @@ function render(){
       const id = e.target.getAttribute("data-id");
       const field = e.target.getAttribute("data-field");
       updateEdit(id, field, e.target.value);
+    });
+  });
+
+  container.querySelectorAll('.info-select, .info-input').forEach(el=>{
+    el.addEventListener("click", (e)=> e.stopPropagation());
+    el.addEventListener("change", (e)=>{
+      const id = e.target.getAttribute("data-id");
+      const field = e.target.getAttribute("data-field");
+      updateEdit(id, field, e.target.value);
+    });
+  });
+
+  container.querySelectorAll('.subprog-chip').forEach(chip=>{
+    chip.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const id = chip.getAttribute("data-id");
+      const field = chip.getAttribute("data-sub");
+      const nowActive = !chip.classList.contains("active");
+      updateEdit(id, field, nowActive ? "Yes" : "No");
+      chip.classList.toggle("active", nowActive);
     });
   });
 
