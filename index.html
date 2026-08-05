@@ -391,6 +391,19 @@
 
   .detail-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.4;}
 
+  .notes-display{font-size:14px;color:var(--text);line-height:1.4;white-space:pre-wrap;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:8px;min-height:20px;}
+  .notes-empty{color:var(--muted);font-style:italic;}
+  .notes-edit-btn, .notes-save-btn{
+    margin-top:8px;
+    padding:8px 16px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    display:inline-block;
+  }
+  .notes-edit-btn{background:#f7f8fa;border:1px solid var(--border);color:var(--navy-dark);}
+  .notes-save-btn{background:var(--green);border:none;color:#fff;}
+
   .empty-state{padding:60px 24px;text-align:center;color:var(--muted);font-size:14px;}
   footer{padding:16px 20px 24px 20px;color:var(--muted);font-size:11.5px;line-height:1.5;text-align:center;}
 
@@ -1212,6 +1225,11 @@ function saveEdits(edits){
 }
 let edits = loadEdits();
 let flippedStudentId = null; // only one student card flipped open at a time
+let notesEditing = {}; // id -> true/false, whether the notes textarea is showing for that student
+
+function escapeHtml(s){
+  return String(s || "").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
 let state = { filter:"All", search:"", sortKey:"student", sortDir:1 };
 
@@ -1302,6 +1320,7 @@ function render(){
     const owedText = money(fin.owed);
     const showAcademic = item.programs.some(p => ACADEMIC_PROGRAMS.includes(p));
     const is3x3 = item.programs.includes("3x3 Basketball");
+    const isEditingNotes = notesEditing[item.id] !== undefined ? notesEditing[item.id] : (row.notes === "");
 
     const academicRows = showAcademic ? `
       <div class="info-row">
@@ -1364,7 +1383,13 @@ function render(){
           <div class="stu-back-header">${item.student}</div>
           <div class="field">
             <label>Notes</label>
-            <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
+            ${isEditingNotes ? `
+              <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
+              <button type="button" class="notes-save-btn" data-id="${item.id}">Save</button>
+            ` : `
+              <div class="notes-display">${row.notes ? escapeHtml(row.notes) : '<span class="notes-empty">No notes yet</span>'}</div>
+              <button type="button" class="notes-edit-btn" data-id="${item.id}">Edit</button>
+            `}
           </div>
           <div class="detail-note">Payment status is pulled automatically from Wix invoices. Original enrollment: ${item.detail}</div>
           <button class="toggle-summary back-flip-bar" data-toggle="${item.id}">
@@ -1404,10 +1429,27 @@ function render(){
   });
 
   container.querySelectorAll('textarea').forEach(el=>{
-    el.addEventListener("change", (e)=>{
-      const id = e.target.getAttribute("data-id");
-      const field = e.target.getAttribute("data-field");
-      updateEdit(id, field, e.target.value);
+    el.addEventListener("click", (e)=> e.stopPropagation());
+  });
+
+  container.querySelectorAll('.notes-edit-btn').forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const id = btn.getAttribute("data-id");
+      notesEditing[id] = true;
+      render();
+    });
+  });
+
+  container.querySelectorAll('.notes-save-btn').forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const id = btn.getAttribute("data-id");
+      const card = btn.closest(".card");
+      const textarea = card.querySelector('textarea[data-field="notes"]');
+      updateEdit(id, "notes", textarea.value);
+      notesEditing[id] = false;
+      render();
     });
   });
 
