@@ -175,11 +175,11 @@
     box-shadow:0 1px 2px rgba(0,0,0,0.04);
     overflow:hidden;
     position:relative;
-    height:340px;
+    height:365px;
     perspective:1400px;
   }
-  .card.card-tall{height:410px;}
-  .card.card-taller{height:452px;}
+  .card.card-tall{height:435px;}
+  .card.card-taller{height:478px;}
   .stu-flip-inner{
     position:relative;
     width:100%;
@@ -332,7 +332,7 @@
     background:#f7f8fa;
     border:none;
     border-top:1px solid var(--border);
-    padding:11px 14px;
+    padding:22px 14px;
     font-size:13px;
     font-weight:bold;
     color:var(--navy-dark);
@@ -428,9 +428,15 @@
   .prog-flip{perspective:1400px;margin-bottom:14px;height:236px;cursor:pointer;}
   .prog-flip-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
   .prog-flip.flipped .prog-flip-inner{transform:rotateY(180deg);}
-  .prog-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04);padding:16px;display:flex;flex-direction:column;}
+  .prog-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04);display:flex;flex-direction:column;overflow:hidden;}
   .prog-back{transform:rotateY(180deg);}
-  .prog-title{font-size:17px;font-weight:bold;color:var(--text);margin-bottom:12px;}
+  .prog-title{font-size:17px;font-weight:bold;padding:16px;}
+  .prog-drawer-RYLA{background:#9fe436;color:#0d1a00;}
+  .prog-drawer-Remnant-Kids{background:#1d4ed8;color:#ffffff;}
+  .prog-drawer-3x3-Basketball{background:#111111;color:#ffffff;}
+  .prog-drawer-Tutoring{background:#df206f;color:#ffffff;}
+  .prog-drawer-Other{background:#8a6d1f;color:#ffffff;}
+  .prog-face-body{padding:16px;flex:1;display:flex;flex-direction:column;overflow-y:auto;}
   .fin-main-title{font-size:15px;font-weight:bold;color:var(--text);margin:4px 4px 10px 4px;}
   .prog-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
   .prog-stat{background:#f7f8fa;border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;justify-content:center;}
@@ -1544,23 +1550,28 @@ function renderFinance(){
       </div>
     `).join("") : `<div class="prog-owed-empty">Nobody owes a balance in ${p} 🎉</div>`;
 
+    const drawerCls = "prog-drawer-" + programBadgeClass(p).replace("badge-", "");
     return `
       <div class="prog-flip${p === flippedProgram ? ' flipped' : ''}" data-prog="${p}">
         <div class="prog-flip-inner">
           <div class="prog-face prog-front">
-            <div class="prog-title">${p}</div>
-            <div class="prog-stats-grid">
-              <div class="prog-stat"><span class="ps-label">Billed</span><span class="ps-value">${money(billed)}</span></div>
-              <div class="prog-stat ps-paid"><span class="ps-label">Paid</span><span class="ps-value">${money(paid)}</span></div>
-              <div class="prog-stat ps-owed"><span class="ps-label">Owed</span><span class="ps-value">${money(owed)}</span></div>
-              <div class="prog-stat"><span class="ps-label">Families w/ Balance</span><span class="ps-value">${owingFamilies.length}</span></div>
+            <div class="prog-title ${drawerCls}">${p}</div>
+            <div class="prog-face-body">
+              <div class="prog-stats-grid">
+                <div class="prog-stat"><span class="ps-label">Billed</span><span class="ps-value">${money(billed)}</span></div>
+                <div class="prog-stat ps-paid"><span class="ps-label">Paid</span><span class="ps-value">${money(paid)}</span></div>
+                <div class="prog-stat ps-owed"><span class="ps-label">Owed</span><span class="ps-value">${money(owed)}</span></div>
+                <div class="prog-stat"><span class="ps-label">Families w/ Balance</span><span class="ps-value">${owingFamilies.length}</span></div>
+              </div>
+              <div class="prog-tap-hint">Tap to see who owes →</div>
             </div>
-            <div class="prog-tap-hint">Tap to see who owes →</div>
           </div>
           <div class="prog-face prog-back">
-            <div class="prog-title">${p} — Balances Due</div>
-            <div class="prog-owed-list">${backRows}</div>
-            <div class="prog-tap-hint">← Tap to flip back</div>
+            <div class="prog-title ${drawerCls}">${p} — Balances Due</div>
+            <div class="prog-face-body">
+              <div class="prog-owed-list">${backRows}</div>
+              <div class="prog-tap-hint">← Tap to flip back</div>
+            </div>
           </div>
         </div>
       </div>
