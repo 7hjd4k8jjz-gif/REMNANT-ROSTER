@@ -121,10 +121,18 @@
     font-weight:bold;
     white-space:nowrap;
   }
-  .chip.active{background:var(--navy);color:#fff;}
+  .chip.chip-all.active{background:var(--navy);color:#fff;}
+  .chip.active{box-shadow:0 0 0 3px rgba(17,17,17,0.55);}
   .chip .n{font-weight:normal;margin-left:3px;opacity:0.85;}
   .chip-active-num{font-weight:bold;color:var(--green);}
-  .chip.active .chip-active-num{color:var(--lime-text);}
+  .chip.chip-all.active .chip-active-num{color:var(--lime-text);}
+
+  .chip-RYLA{border-color:transparent;background:#9fe436;color:#0d1a00;}
+  .chip-Remnant-Kids{border-color:transparent;background:#1d4ed8;color:#ffffff;}
+  .chip-3x3-Basketball{border-color:transparent;background:#111111;color:#ffffff;}
+  .chip-Tutoring{border-color:transparent;background:#df206f;color:#ffffff;}
+  .chip-Other{border-color:transparent;background:#fec105;color:#0d1a00;}
+  .chip-RYLA .chip-active-num, .chip-Remnant-Kids .chip-active-num, .chip-3x3-Basketball .chip-active-num, .chip-Tutoring .chip-active-num, .chip-Other .chip-active-num{color:inherit;}
 
   .row2{display:flex;gap:8px;align-items:center;}
   #search{
@@ -488,12 +496,12 @@
     <span class="summary-dot dot-total"></span><strong id="totalCount">0</strong> Total
   </div>
   <div class="chip-row" id="chipRow">
-    <button class="chip active" data-filter="All">All <span class="n" id="n-All"></span></button>
-    <button class="chip" data-filter="RYLA">RYLA <span class="n" id="n-RYLA"></span></button>
-    <button class="chip" data-filter="Remnant Kids">Remnant Kids <span class="n" id="n-Remnant Kids"></span></button>
-    <button class="chip" data-filter="3x3 Basketball">3x3 Basketball <span class="n" id="n-3x3 Basketball"></span></button>
-    <button class="chip" data-filter="Tutoring">Tutoring <span class="n" id="n-Tutoring"></span></button>
-    <button class="chip" data-filter="Other">Other <span class="n" id="n-Other"></span></button>
+    <button class="chip chip-all active" data-filter="All">All <span class="n" id="n-All"></span></button>
+    <button class="chip chip-RYLA" data-filter="RYLA">RYLA <span class="n" id="n-RYLA"></span></button>
+    <button class="chip chip-Remnant-Kids" data-filter="Remnant Kids">Remnant Kids <span class="n" id="n-Remnant Kids"></span></button>
+    <button class="chip chip-3x3-Basketball" data-filter="3x3 Basketball">3x3 Basketball <span class="n" id="n-3x3 Basketball"></span></button>
+    <button class="chip chip-Tutoring" data-filter="Tutoring">Tutoring <span class="n" id="n-Tutoring"></span></button>
+    <button class="chip chip-Other" data-filter="Other">Other <span class="n" id="n-Other"></span></button>
   </div>
   <div class="row2">
     <input type="text" id="search" placeholder="Search student or parent...">
