@@ -254,6 +254,7 @@
   .badge-Remnant-Kids{background:#dcf1e4;color:var(--green);}
   .badge-3x3-Basketball{background:var(--gray-badge);color:#ffffff;}
   .badge-Other{background:#ffffff;color:#666;border:1px solid #ddd;}
+  .badge-Tutoring{background:var(--orange-bg);color:var(--orange);}
 
   .contact-row{
     display:flex;
@@ -272,7 +273,7 @@
     justify-content:center;
     gap:5px;
   }
-  .contact-btn:first-child{border-right:1px solid var(--border);}
+  .contact-btn:not(:last-child){border-right:1px solid var(--border);}
   .contact-btn .ic{font-size:14px;}
 
   .toggle-summary{
@@ -409,6 +410,7 @@
     <button class="chip" data-filter="RYLA">RYLA <span class="n" id="n-RYLA"></span></button>
     <button class="chip" data-filter="Remnant Kids">Remnant Kids <span class="n" id="n-Remnant Kids"></span></button>
     <button class="chip" data-filter="3x3 Basketball">3x3 Basketball <span class="n" id="n-3x3 Basketball"></span></button>
+    <button class="chip" data-filter="Tutoring">Tutoring <span class="n" id="n-Tutoring"></span></button>
     <button class="chip" data-filter="Other">Other <span class="n" id="n-Other"></span></button>
   </div>
   <div class="row2">
@@ -957,7 +959,7 @@ const ROSTER = [
     "phone": "",
     "email": "gabrielacruz317@gmail.com",
     "programs": [
-      "Other"
+      "Tutoring"
     ],
     "payment": "STEP UP",
     "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
@@ -981,7 +983,7 @@ const ROSTER = [
     "phone": "",
     "email": "rodriguezfamily016@gmail.com",
     "programs": [
-      "Other"
+      "Tutoring"
     ],
     "payment": "STEP UP",
     "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
@@ -993,7 +995,7 @@ const ROSTER = [
     "phone": "",
     "email": "rodriguezfamily016@gmail.com",
     "programs": [
-      "Other"
+      "Tutoring"
     ],
     "payment": "STEP UP",
     "detail": "Tutoring only on Wix invoices — no core program registration found. Confirm enrollment."
@@ -1057,10 +1059,8 @@ function findRosterItem(id){
 }
 function getRow(idOrItem){
   const id = (idOrItem && typeof idOrItem === "object") ? idOrItem.id : idOrItem;
-  const rosterItem = findRosterItem(id);
   const e = edits[id] || {};
   return {
-    paidThrough: e.paidThrough !== undefined ? e.paidThrough : (rosterItem.defaultPaidThrough || ""),
     notes: e.notes !== undefined ? e.notes : "",
     active: e.active || "Yes"
   };
@@ -1076,14 +1076,6 @@ function statusInfo(id){
   if(fin.none) return {text:"Needs invoice", cls:"status-needs"};
   if(fin.owed <= 0) return {text:"Paid", cls:"status-paid"};
   return {text:"Invoice sent, unpaid", cls:"status-invoiced"};
-}
-function refreshSummary(card, id){
-  const row = getRow({id});
-  const info = statusInfo(id);
-  const btn = card.querySelector(".toggle-summary");
-  btn.classList.remove("status-paid","status-invoiced","status-needs");
-  btn.classList.add(info.cls);
-  btn.querySelector("span").textContent = info.text + (row.paidThrough ? " · Through " + row.paidThrough : "");
 }
 
 function matchesFilter(item){ return state.filter === "All" ? true : item.programs.includes(state.filter); }
@@ -1108,7 +1100,7 @@ function sortedFiltered(){
   return list;
 }
 function updateCounts(){
-  const cats = ["All","RYLA","Remnant Kids","3x3 Basketball","Other"];
+  const cats = ["All","RYLA","Remnant Kids","3x3 Basketball","Tutoring","Other"];
   cats.forEach(c=>{
     const items = c === "All" ? ROSTER : ROSTER.filter(item=>item.programs.includes(c));
     const total = items.length;
@@ -1131,7 +1123,9 @@ function render(){
     const isOpen = expandedIds.has(item.id);
     const payClass = item.payment === "STEP UP" ? "pay-STEP" : "pay-Self";
     const badges = item.programs.map(p=>`<span class="badge ${programBadgeClass(p)}">${p}</span>`).join("");
-    const telHref = "tel:" + item.phone.replace(/[^0-9+]/g,'');
+    const digits = item.phone.replace(/[^0-9+]/g,'');
+    const telHref = "tel:" + digits;
+    const smsHref = "sms:" + digits;
     const fin = getFinance(item.id);
     const owedCls = fin.owed > 0 ? "owed-due" : "owed-zero";
     const owedText = money(fin.owed);
@@ -1156,17 +1150,14 @@ function render(){
       <div class="owed-row"><span class="owed-label">Balance</span><span class="owed-amt ${owedCls}">${owedText}</span></div>
       <div class="contact-row">
         <a class="contact-btn" href="${telHref}"><span class="ic">📞</span> Call</a>
+        <a class="contact-btn" href="${smsHref}"><span class="ic">💬</span> Text</a>
         <a class="contact-btn" href="mailto:${item.email}"><span class="ic">✉️</span> Email</a>
       </div>
       <button class="toggle-summary ${statusInfo(item.id).cls}" data-toggle="${item.id}">
-        <span>${statusInfo(item.id).text}${row.paidThrough ? " · Through " + row.paidThrough : ""}</span>
+        <span>${statusInfo(item.id).text}</span>
         <span class="chev">▾</span>
       </button>
       <div class="details">
-        <div class="field">
-          <label>Paid Through (Month/Year)</label>
-          <input type="text" data-id="${item.id}" data-field="paidThrough" placeholder="e.g. Aug 2026" value="${row.paidThrough}">
-        </div>
         <div class="field">
           <label>Notes</label>
           <textarea data-id="${item.id}" data-field="notes" placeholder="notes...">${row.notes}</textarea>
@@ -1196,14 +1187,11 @@ function render(){
     });
   });
 
-  container.querySelectorAll('input[type=text], textarea').forEach(el=>{
+  container.querySelectorAll('textarea').forEach(el=>{
     el.addEventListener("change", (e)=>{
       const id = e.target.getAttribute("data-id");
       const field = e.target.getAttribute("data-field");
       updateEdit(id, field, e.target.value);
-      if(field === "paidThrough"){
-        refreshSummary(e.target.closest(".card"), id);
-      }
     });
   });
 
@@ -1278,7 +1266,7 @@ function renderFinance(){
   document.getElementById("finOwed").textContent = money(totalOwed);
 
   // By program
-  const progs = ["RYLA","Remnant Kids","3x3 Basketball","Other"];
+  const progs = ["RYLA","Remnant Kids","3x3 Basketball","Tutoring","Other"];
   const progHtml = progs.map(p=>{
     const items = withFin.filter(i=>i.programs.includes(p));
     if(!items.length) return "";
