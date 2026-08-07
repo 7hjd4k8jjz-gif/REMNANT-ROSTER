@@ -14,6 +14,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
 
+<!-- Firebase: shared cloud storage so edits (Active status, Notes, Grade, Shirt Size, etc.)
+     sync live across every device instead of staying stuck in one phone's local storage. -->
+<script src="https://www.gstatic.com/firebasejs/12.17.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore-compat.js"></script>
+
 <style>
   :root{
     color-scheme: light;
@@ -1220,6 +1226,62 @@ const ROSTER = [
     "payment": "STEP UP",
     "detail": "Sibling of Aaron Barfield, same contact info. Added by Kevin 2026-08-05, no enrollment form on file yet — invoice sent for $415 (tuition $240 + supply fee $100 + registration fee $75).",
     "id": 46
+  },
+  {
+    "student": "Rashad Lovett Jr",
+    "parent": "Kaceria Lovett",
+    "phone": "+1 910-760-2188",
+    "email": "kacerial@icloud.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form submitted 2026-08-05: selected Remnant Kids. Listed grade is 6th (past Remnant Kids' usual K-5 range), but Kevin placed him in Remnant Kids anyway as a special case — his maturity level fits that class better than RYLA.",
+    "defaultGrade": "6th Grade",
+    "defaultShirt": "Youth Medium",
+    "id": 47
+  },
+  {
+    "student": "Ra'Shelle Lovett",
+    "parent": "Kaceria Lovett",
+    "phone": "+1 910-760-2188",
+    "email": "kacerial@icloud.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form submitted 2026-08-05: Remnant Kids (Grades K-5).",
+    "defaultGrade": "4th Grade",
+    "defaultShirt": "Youth Medium",
+    "id": 48
+  },
+  {
+    "student": "Rahmarr Lovett",
+    "parent": "Kaceria Lovett",
+    "phone": "+1 910-760-2188",
+    "email": "kacerial@icloud.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form submitted 2026-08-05: Remnant Kids (Grades K-5). Goes by the nickname \"Prince,\" per Kevin.",
+    "defaultGrade": "2nd Grade",
+    "defaultShirt": "Youth Small",
+    "id": 49
+  },
+  {
+    "student": "Rahmarr Lovett (Kindergarten)",
+    "parent": "Kaceria Lovett",
+    "phone": "+1 910-760-2188",
+    "email": "kacerial@icloud.com",
+    "programs": [
+      "Remnant Kids"
+    ],
+    "payment": "STEP UP",
+    "detail": "From enrollment form submitted 2026-08-05: Remnant Kids (Grades K-5). Shares a first name with his sibling (id 49, \"Prince,\" 2nd Grade) — the form's birthday for this entry matched his sibling Ra'Shelle's exactly, so per Kevin the birthday is unreliable and grade level was used instead. \"(Kindergarten)\" added to the name here just to tell the two Rahmarrs apart on the roster.",
+    "defaultGrade": "Kindergarden",
+    "defaultShirt": "Youth Small",
+    "id": 50
   }
 ];
 
@@ -1265,7 +1327,70 @@ function loadEdits(){
 function saveEdits(edits){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(edits)); }catch(e){}
 }
+// edits starts from the local cache so the app paints instantly; syncCloud() below takes over
+// as the source of truth as soon as Firebase is ready (usually well under a second).
 let edits = loadEdits();
+
+// ---- Cloud sync (Firebase) ----------------------------------------------------------------
+// Edits (Active/Notes/Grade/Shirt Size/3x3 sub-programs) are stored in one shared Firestore
+// document so every device sees the same data live, instead of each phone keeping its own
+// separate localStorage copy. localStorage is still used as an instant-paint + offline cache.
+const firebaseConfig = {
+  apiKey: "AIzaSyDiJTVx6IDMILwIcWCx8ezwrbV6S42JAxk",
+  authDomain: "remnant-youth-roster.firebaseapp.com",
+  projectId: "remnant-youth-roster",
+  storageBucket: "remnant-youth-roster.firebasestorage.app",
+  messagingSenderId: "949830930288",
+  appId: "1:949830930288:web:859b102116ee3f904249b5"
+};
+let cloudDocRef = null;
+let cloudReady = false;
+let pendingCloudWrites = []; // queued {id,field,value} edits made before the cloud connection was ready
+let applyingRemoteSnapshot = false;
+
+function pushCloudWrite(id, field, value){
+  if(!cloudReady || !cloudDocRef){
+    pendingCloudWrites.push({id, field, value});
+    return;
+  }
+  cloudDocRef.update({ [`${id}.${field}`]: value }).catch(err=>{
+    console.error("Cloud sync write failed:", err);
+  });
+}
+
+function initCloudSync(){
+  try{
+    const app = firebase.initializeApp(firebaseConfig);
+    firebase.auth().signInAnonymously().catch(err=>{
+      console.error("Anonymous sign-in failed, edits will stay local-only on this device:", err);
+    });
+    firebase.auth().onAuthStateChanged(user=>{
+      if(!user) return;
+      cloudDocRef = firebase.firestore().collection("remnant_roster").doc("edits");
+      // Make sure the shared doc exists without ever wiping existing data.
+      cloudDocRef.set({}, {merge:true}).then(()=>{
+        cloudReady = true;
+        // Flush any edits the user made in the brief window before the cloud connection was ready.
+        pendingCloudWrites.forEach(w=> pushCloudWrite(w.id, w.field, w.value));
+        pendingCloudWrites = [];
+      }).catch(err=>{
+        console.error("Could not reach cloud sync, edits will stay local-only on this device:", err);
+      });
+      cloudDocRef.onSnapshot(snap=>{
+        if(!snap.exists) return;
+        applyingRemoteSnapshot = true;
+        edits = snap.data() || {};
+        saveEdits(edits); // keep the offline cache current too
+        render();
+        applyingRemoteSnapshot = false;
+      }, err=>{
+        console.error("Cloud sync listener error:", err);
+      });
+    });
+  }catch(err){
+    console.error("Cloud sync unavailable, edits will stay local-only on this device:", err);
+  }
+}
 let flippedStudentId = null; // only one student card flipped open at a time
 let notesEditing = {}; // id -> true/false, whether the notes textarea is showing for that student
 
@@ -1300,6 +1425,7 @@ function updateEdit(id, field, value){
   if(!edits[id]) edits[id] = {};
   edits[id][field] = value;
   saveEdits(edits);
+  pushCloudWrite(id, field, value);
 }
 // Payment status is now driven entirely by Wix invoice data (FINANCE), not manual toggles.
 function statusInfo(id){
@@ -1783,7 +1909,8 @@ document.getElementById("btnFinanceView").addEventListener("click", ()=>{
   renderFinance();
 });
 
-render();
+render(); // instant first paint from the local cache
+initCloudSync(); // then take over live from Firebase — re-renders automatically once connected
 </script>
 </body>
 </html>
